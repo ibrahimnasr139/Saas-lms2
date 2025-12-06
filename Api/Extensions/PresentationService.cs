@@ -22,7 +22,21 @@ namespace Api.Extensions
                 configuration.ReadFrom.Configuration(context.Configuration)
                     .ReadFrom.Services(services)
             );
-            // remember to register cors
+            builder.Services.AddCors(
+                options =>
+                {
+                    options.AddDefaultPolicy(
+                        policy =>
+                        {
+                            policy.WithOrigins(builder.Configuration.GetSection(AuthConstants.AllowedOrigins).Get<string[]>()!)
+                                .AllowAnyHeader()
+                                .AllowAnyMethod()
+                                .AllowCredentials()
+                                .SetPreflightMaxAge(TimeSpan.FromMinutes(10));
+                        }
+                    );
+                }
+                );
             var jwtSettings = builder.Configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
             builder.Services.AddAuthentication(
                options =>
