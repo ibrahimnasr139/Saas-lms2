@@ -3,6 +3,7 @@ using Serilog;
 using Infrastructure.Extensions;
 using Application.Extensions;
 using Api.Extensions;
+using Application.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -35,18 +35,18 @@ namespace Application.Features.Auth.Commands.Login
             {
                 return UserErrors.InvalidCredentials;
             }
-            var signInResult = await _signInManager.PasswordSignInAsync(user, request.Password, false, false);
-            if (signInResult.Succeeded)
+            if(!user.EmailConfirmed)
+            {
+                return UserErrors.EmailNotConfirmed;
+            }
+            var signInResult = await _userManager.CheckPasswordAsync(user, request.Password);
+            if (signInResult)
             {
                 _tokenProvider.GenerateJwtToken(user!); 
                 var refreshToken = _tokenProvider.GenerateRefreshToken();
                 _refreshRepository.AddRefreshToken(user, refreshToken.token, refreshToken.expiresOn, cancellationToken);
                 await _refreshRepository.SaveAsync(cancellationToken);
                 return _mapper.Map<LoginDto>(user);
-            }
-            if (signInResult.IsNotAllowed)
-            {
-                return UserErrors.EmailNotConfirmed;
             }
             return UserErrors.InvalidCredentials;
         }

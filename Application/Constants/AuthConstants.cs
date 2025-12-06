@@ -8,5 +8,6 @@ namespace Application.Constants
     {
         public const string AccessToken = "AccessToken";
         public const string RefreshToken = "RefreshToken";
+        public const string ApiScheme = "ApiScheme";
     }
 }

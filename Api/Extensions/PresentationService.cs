@@ -30,7 +30,7 @@ namespace Api.Extensions
                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                })
-             .AddJwtBearer(
+             .AddJwtBearer(AuthConstants.ApiScheme,
                options =>
                {
                    options.SaveToken = true;
@@ -51,7 +51,7 @@ namespace Api.Extensions
                        OnMessageReceived = context =>
                        {
                            context.Token = context.Request.Cookies[AuthConstants.AccessToken];
-                            return Task.CompletedTask;
+                           return Task.CompletedTask;
                        }
                    };
                }
