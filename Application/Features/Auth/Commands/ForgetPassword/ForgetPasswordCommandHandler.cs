@@ -26,7 +26,7 @@ namespace Application.Features.Auth.Commands.ForgetPassword
                 return UserErrors.EmailNotFound;
             }
             var otpCode = new Random().Next(100000, 999999).ToString();
-            await _hybridCache.SetAsync($"id={user.Id}&token={otpCode}",user.Id, new HybridCacheEntryOptions
+            await _hybridCache.SetAsync(otpCode,user.Id, new HybridCacheEntryOptions
             {
                 Expiration = TimeSpan.FromMinutes(2)
             }, cancellationToken: cancellationToken);
