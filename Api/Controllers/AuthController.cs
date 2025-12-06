@@ -1,4 +1,7 @@
-﻿using Application.Features.Auth.Commands.Signup;
+﻿using Application.Features.Auth.Commands.ForgetPassword;
+using Application.Features.Auth.Commands.Login;
+using Application.Features.Auth.Commands.ResetPassword;
+using Application.Features.Auth.Commands.Signup;
 using Application.Features.Auth.Commands.VerifyOtp;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -33,6 +36,32 @@ namespace Api.Controllers
                 error => StatusCode((int)error.HttpStatusCode, error.Message)
             );
         }
-
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginCommand loginCommand, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(loginCommand, cancellationToken);
+            return result.Match(
+                loginDto => Ok(loginDto),
+                error => StatusCode((int)error.HttpStatusCode, error.Message)
+            );
+        }
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgetPasswordCommand forgetPasswordCommand, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(forgetPasswordCommand, cancellationToken);
+            return result.Match(
+                success => Ok(new { Message = "success" }),
+                error => StatusCode((int)error.HttpStatusCode, error.Message)
+            );
+        }
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordCommand resetPasswordCommand, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(resetPasswordCommand, cancellationToken);
+            return result.Match(
+                success => Ok(new { Message = "Password reset successfully" }),
+                error => StatusCode((int)error.HttpStatusCode, error.Message)
+            );
+        }
     }
 }

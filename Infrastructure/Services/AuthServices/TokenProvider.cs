@@ -50,7 +50,7 @@ namespace Infrastructure.Services.AuthServices
         public (string token, DateTime expiresOn) GenerateRefreshToken()
         {
             var refreshToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
-            var expiresOn = DateTime.UtcNow.AddDays(30);
+            var expiresOn = DateTime.UtcNow.AddDays(7);
             _httpContextAccessor?.HttpContext?.Response.Cookies.Append(AuthConstants.RefreshToken, refreshToken,
                 new CookieOptions
                 {

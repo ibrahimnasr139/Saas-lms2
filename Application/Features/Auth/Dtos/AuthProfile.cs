@@ -12,7 +12,9 @@ namespace Application.Features.Auth.Dtos
         {
             CreateMap<SignupCommand, ApplicationUser>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
-        
+            CreateMap<ApplicationUser, LoginDto>()
+                .ForMember(dest => dest.LastActiveTenant, opt => opt.MapFrom(src => src.LastActiveTenantSubDomain ?? null!));
+
         }
     }
 }

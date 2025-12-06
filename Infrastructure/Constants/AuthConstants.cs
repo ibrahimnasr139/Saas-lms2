@@ -6,7 +6,7 @@ namespace Infrastructure.Constants
 {
     public static class AuthConstants
     {
-        public const string AccessToken = "Access Token";
-        public const string RefreshToken = "Refresh Token";
+        public const string AccessToken = "AccessToken";
+        public const string RefreshToken = "RefreshToken";
     }
 }

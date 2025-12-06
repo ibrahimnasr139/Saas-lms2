@@ -2,6 +2,7 @@
 using Application.Helpers;
 using Hangfire;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -15,16 +16,19 @@ namespace Application.Features.Auth.Commands.Signup
         private readonly IMapper _mapper;
         private readonly IEmailSender _emailSender;
         private readonly HybridCache _hybridCache;
+        private readonly ILogger<SignupCommandHandler> _logger;
         public SignupCommandHandler(
             UserManager<ApplicationUser> userManager,
             IMapper mapper,
             IEmailSender emailSender,
-            HybridCache hybridCache)
+            HybridCache hybridCache,
+            ILogger<SignupCommandHandler>logger)
         {
             _userManager = userManager;
             _mapper = mapper;
             _emailSender = emailSender;
             _hybridCache = hybridCache;
+            _logger = logger;
         }
         public async Task<OneOf<bool, Error>> Handle(SignupCommand request, CancellationToken cancellationToken)
         {
@@ -41,23 +45,18 @@ namespace Application.Features.Auth.Commands.Signup
                 return new Error("UserCreationFailed", error, HttpStatusCode.BadRequest);
             }
             
-           var otpCode = await _hybridCache.GetOrCreateAsync<string>(
-           $"otp-{request.Email}",
-           async token =>
-           {
-               var newOtp = new Random().Next(100000, 999999).ToString();
-               return newOtp;
-           },
-           options: new HybridCacheEntryOptions
-           {
-               Expiration = TimeSpan.FromMinutes(2)
-           },
-           cancellationToken: cancellationToken);
-           var emailBody = EmailConfirmationHelper.GenerateEmailBodyHelper("OtpTemplate", new Dictionary<string, string>
+           var otpCode = new Random().Next(100000, 999999).ToString();
+            await _hybridCache.SetAsync($"EmailOtp_{request.Email}", otpCode, new HybridCacheEntryOptions
+            {
+                Expiration = TimeSpan.FromMinutes(2)
+            }, cancellationToken: cancellationToken);
+
+            var emailBody = EmailConfirmationHelper.GenerateEmailBodyHelper("OtpTemplate", new Dictionary<string, string>
             {
                 { "{{OTP_CODE}}", otpCode },
                 { "{{UserName}}", request.FirstName }
             });
+            _logger.LogInformation("Enqueuing email confirmation job for {Email} and otp is {otpCode}", request.Email, otpCode);
             BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(request.Email, "Email Confirmation", emailBody));
             return true;
         }

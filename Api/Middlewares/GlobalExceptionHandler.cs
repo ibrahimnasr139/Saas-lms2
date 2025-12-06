@@ -9,7 +9,7 @@ namespace Api.Middlewares
         {
             var problemDetails = new ProblemDetails
             {
-                Title = "An unexpected error occurred.",
+                Title = "Something went wrong",
                 Status = StatusCodes.Status500InternalServerError,
             };
             httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
