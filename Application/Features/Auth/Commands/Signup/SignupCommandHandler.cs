@@ -46,7 +46,7 @@ namespace Application.Features.Auth.Commands.Signup
             }
             
            var otpCode = new Random().Next(100000, 999999).ToString();
-            await _hybridCache.SetAsync($"EmailOtp_{request.Email}", otpCode, new HybridCacheEntryOptions
+            await _hybridCache.SetAsync(otpCode, request.Email, new HybridCacheEntryOptions
             {
                 Expiration = TimeSpan.FromMinutes(2)
             }, cancellationToken: cancellationToken);

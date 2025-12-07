@@ -27,7 +27,7 @@ namespace Application.Features.Auth.Commands.ForgetPassword
             }
             if (!user.EmailConfirmed)
             {
-                return UserErrors.EmailNotConfirmed;
+                return true;
             }
             var otpCode = new Random().Next(100000, 999999).ToString();
             await _hybridCache.SetAsync(otpCode,user.Id, new HybridCacheEntryOptions

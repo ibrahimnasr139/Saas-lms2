@@ -31,8 +31,8 @@ namespace Api.Extensions
                             policy.WithOrigins(builder.Configuration.GetSection(AuthConstants.AllowedOrigins).Get<string[]>()!)
                                 .AllowAnyHeader()
                                 .AllowAnyMethod()
-                                .AllowCredentials()
-                                .SetPreflightMaxAge(TimeSpan.FromMinutes(10));
+                                .AllowCredentials();
+                               // .SetPreflightMaxAge(TimeSpan.FromMinutes(10));
                         }
                     );
                 }

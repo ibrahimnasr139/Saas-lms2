@@ -23,18 +23,17 @@ namespace Application.Features.Auth.Commands.VerifyOtp
         }
         public async Task<OneOf<bool, Error>> Handle(VerifyOtpCommand request, CancellationToken cancellationToken)
         {
-            var cacheKey = $"EmailOtp_{request.Email}";
-            var cachedOtp = await _hybridCache.GetOrCreateAsync(cacheKey, async entry =>
+            var email = await _hybridCache.GetOrCreateAsync(request.OtpCode, async entry =>
             {
                return await Task.FromResult<string?>(null);
             }, cancellationToken: cancellationToken);
-            if (cachedOtp is null || !string.Equals(cachedOtp, request.OtpCode, StringComparison.Ordinal))
+            if (email is null)
             {
                 return UserErrors.InvalidOtpCode;
             }
 
-            await _hybridCache.RemoveAsync(cacheKey);
-            var user = await _userManager.FindByEmailAsync(request.Email);
+            await _hybridCache.RemoveAsync(email);
+            var user = await _userManager.FindByEmailAsync(email);
             user?.EmailConfirmed = true;
             _tokenProvider.GenerateJwtToken(user!);
             var refreshToken = _tokenProvider.GenerateRefreshToken();
