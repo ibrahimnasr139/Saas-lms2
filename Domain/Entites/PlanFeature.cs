@@ -7,16 +7,16 @@ namespace Domain.Entites
 {
     public sealed class PlanFeature
     {
-        public string Id { get; set; } = string.Empty;
+        public Guid Id { get; set; } 
         public int LimitValue { get; set; }
         public string LimitUnit { get; set; } = string.Empty;
         public string? Note { get; set; }
 
 
-        public string PlanId { get; set; } = string.Empty;
-        public Plan Plan { get; set; }
+        public Guid PlanId { get; set; } 
+        public Plan Plan { get; set; } = null!;
 
-        public string FeatureId { get; set; } = string.Empty;
-        public Feature Feature { get; set; }
+        public Guid FeatureId { get; set; }
+        public Feature Feature { get; set; } = null!;
     }
 }

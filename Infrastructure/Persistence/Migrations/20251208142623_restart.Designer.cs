@@ -9,11 +9,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Infrastructure.Persistence.Migrations
+namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251207185124_AddPlansPricingAndFeatures")]
-    partial class AddPlansPricingAndFeatures
+    [Migration("20251208142623_restart")]
+    partial class restart
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -118,8 +118,9 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entites.Feature", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -152,8 +153,9 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entites.Plan", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -186,12 +188,12 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entites.PlanFeature", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("FeatureId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("FeatureId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("LimitUnit")
                         .IsRequired()
@@ -205,9 +207,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
-                    b.Property<string>("PlanId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("PlanId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -221,8 +222,9 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entites.PlanPricing", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("BillingCycle")
                         .IsRequired()
@@ -240,9 +242,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<decimal?>("DiscountPercent")
                         .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("PlanId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("PlanId")
+                        .HasColumnType("uuid");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");

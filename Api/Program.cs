@@ -5,7 +5,7 @@ using Application.Extensions;
 using Api.Extensions;
 using Application.Constants;
 using Microsoft.OpenApi;
-using Infrastructure.Seeders.Plan;
+using Infrastructure.Seeders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +20,7 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var planSeeder = scope.ServiceProvider.GetRequiredService<IPlanSeeder>();
+    var planSeeder = scope.ServiceProvider.GetRequiredService<ISeeder>();
     await planSeeder.SeedAsync();
 }
 

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using MediatR;
-namespace Application.Features.Plan.Queries
+namespace Application.Features.Plans.Queries.GetAllPlans
 {
     public sealed class GetAllPlansQuery : IRequest<IEnumerable<PlanResponse>>
     {

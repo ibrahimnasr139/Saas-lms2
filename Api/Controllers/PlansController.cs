@@ -1,4 +1,4 @@
-﻿using Application.Features.Plan.Queries;
+﻿using Application.Features.Plans.Queries.GetAllPlans;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +13,7 @@ namespace Api.Controllers
 
         public PlansController(IMediator mediator)
         {
-            this._mediator = mediator;
+            _mediator = mediator;
         }
 
         [HttpGet("")]

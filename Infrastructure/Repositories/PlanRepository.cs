@@ -14,8 +14,8 @@ namespace Infrastructure.Repositories
 
         public PlanRepository(AppDbContext context, IMapper mapper)
         {
-            this._context = context;
-            this._mapper = mapper;
+            _context = context;
+            _mapper = mapper;
         }
         public async Task<IEnumerable<PlanResponse>> GetAllPlansWithDetailsAsync(CancellationToken cancellationToken)
         {

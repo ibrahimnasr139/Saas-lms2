@@ -5,7 +5,7 @@ using Infrastructure.Common.Options;
 using Infrastructure.Health;
 using Infrastructure.Persistence;
 using Infrastructure.Repositories;
-using Infrastructure.Seeders.Plan;
+using Infrastructure.Seeders;
 using Infrastructure.Services;
 using Infrastructure.Services.AuthServices;
 using Microsoft.AspNetCore.Builder;
@@ -63,7 +63,7 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<ITokenProvider, TokenProvider>();
             builder.Services.AddScoped<IRefreshRepository, RefreshRepository>();
 
-            builder.Services.AddScoped<IPlanSeeder, PlanSeeder>();
+            builder.Services.AddScoped<ISeeder, Seeder>();
             builder.Services.AddScoped<IPlanRepository, PlanRepository>();
         }
     }

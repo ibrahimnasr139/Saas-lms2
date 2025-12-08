@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Application.Constants
 {
-    public static class CacheKeys
+    public static class CacheKeysConstants
     {
         public const string PlanKey = "Plans";
     }

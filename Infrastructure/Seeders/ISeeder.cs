@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Infrastructure.Seeders.Plan
+namespace Infrastructure.Seeders
 {
-    public interface IPlanSeeder
+    public interface ISeeder
     {
         Task SeedAsync();
     }

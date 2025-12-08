@@ -5,7 +5,7 @@ using MediatR;
 using Application.Contracts.Repositories;
 using Application.Constants;
 
-namespace Application.Features.Plan.Queries
+namespace Application.Features.Plans.Queries.GetAllPlans
 {
     public sealed class GetAllPlansQueryHandler : IRequestHandler<GetAllPlansQuery, IEnumerable<PlanResponse>>
     {
@@ -15,14 +15,14 @@ namespace Application.Features.Plan.Queries
 
         public GetAllPlansQueryHandler(IMapper mapper , IPlanRepository planRepository , HybridCache hybridCache)
         {
-            this._mapper = mapper;
-            this._planRepository = planRepository;
-            this._hybridCache = hybridCache;
+            _mapper = mapper;
+            _planRepository = planRepository;
+            _hybridCache = hybridCache;
         }
 
         public async Task<IEnumerable<PlanResponse>> Handle(GetAllPlansQuery request, CancellationToken cancellationToken)
         {
-            var cacheKey = CacheKeys.PlanKey;
+            var cacheKey = CacheKeysConstants.PlanKey;
 
             var plans = await _hybridCache.GetOrCreateAsync(
                 cacheKey,

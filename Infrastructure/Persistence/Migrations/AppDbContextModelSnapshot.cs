@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Infrastructure.Persistence.Migrations
+namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     partial class AppDbContextModelSnapshot : ModelSnapshot
@@ -115,8 +115,9 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entites.Feature", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -144,13 +145,14 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("Key")
                         .IsUnique();
 
-                    b.ToTable("Features", (string)null);
+                    b.ToTable("Features");
                 });
 
             modelBuilder.Entity("Domain.Entites.Plan", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -178,17 +180,17 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("Slug")
                         .IsUnique();
 
-                    b.ToTable("Plans", (string)null);
+                    b.ToTable("Plans");
                 });
 
             modelBuilder.Entity("Domain.Entites.PlanFeature", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("FeatureId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("FeatureId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("LimitUnit")
                         .IsRequired()
@@ -202,9 +204,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
-                    b.Property<string>("PlanId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("PlanId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -213,13 +214,14 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasIndex("PlanId", "FeatureId")
                         .IsUnique();
 
-                    b.ToTable("plansFeature", (string)null);
+                    b.ToTable("plansFeature");
                 });
 
             modelBuilder.Entity("Domain.Entites.PlanPricing", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("BillingCycle")
                         .IsRequired()
@@ -237,9 +239,8 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<decimal?>("DiscountPercent")
                         .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("PlanId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("PlanId")
+                        .HasColumnType("uuid");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -251,7 +252,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("PlanId");
 
-                    b.ToTable("PlanPricings", (string)null);
+                    b.ToTable("PlanPricings");
                 });
 
             modelBuilder.Entity("Domain.Entites.RefreshToken", b =>
@@ -283,7 +284,7 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens", (string)null);
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
