@@ -1,8 +1,9 @@
-﻿using Application.Contracts.Repositories.PlanRepository;
-using Application.Features.Plan.DTOs;
+﻿using Application.Features.Plan.DTOs;
 using Microsoft.Extensions.Caching.Hybrid;
 using AutoMapper;
 using MediatR;
+using Application.Contracts.Repositories;
+using Application.Constants;
 
 namespace Application.Features.Plan.Queries
 {
@@ -21,13 +22,13 @@ namespace Application.Features.Plan.Queries
 
         public async Task<IEnumerable<PlanResponse>> Handle(GetAllPlansQuery request, CancellationToken cancellationToken)
         {
-            var cacheKey = "Plans";
+            var cacheKey = CacheKeys.PlanKey;
 
             var plans = await _hybridCache.GetOrCreateAsync(
                 cacheKey,
                 async cacheEntry =>
                 {
-                    var data = await _planRepository.GetAllPlansWithDetailsAsync();
+                    var data = await _planRepository.GetAllPlansWithDetailsAsync(cancellationToken);
                     return _mapper.Map<IEnumerable<PlanResponse>>(data);
                 },
                 cancellationToken: cancellationToken

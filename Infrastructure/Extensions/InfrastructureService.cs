@@ -1,12 +1,10 @@
-﻿using Application.Contracts.Repositories.PlanRepository;
-using Hangfire;
+﻿using Hangfire;
 using Hangfire.PostgreSql;
 using Hangfire.PostgreSql.Factories;
 using Infrastructure.Common.Options;
 using Infrastructure.Health;
 using Infrastructure.Persistence;
 using Infrastructure.Repositories;
-using Infrastructure.Repositories.PlanRepository;
 using Infrastructure.Seeders.Plan;
 using Infrastructure.Services;
 using Infrastructure.Services.AuthServices;
