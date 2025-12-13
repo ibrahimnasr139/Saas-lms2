@@ -1,5 +1,6 @@
 ﻿using Application.Constants;
 using Application.Features.Users.Queries.GetProfile;
+using Application.Features.Users.Queries.GetTenants;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -21,6 +22,14 @@ namespace Api.Controllers
         public async Task<IActionResult> GetProfile(CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new GetProfileQuery(), cancellationToken);
+            return Ok(result);
+        }
+
+
+        [HttpGet("me/tenants")]
+        public async Task<IActionResult> GetTenants(CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetTenantsQuery(), cancellationToken);
             return Ok(result);
         }
     }
