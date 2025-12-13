@@ -66,6 +66,7 @@ namespace Application.Features.Tenants.Commands.CreateOnboarding
                 await _tenantRepository.CommitTransactionAsync(cancellationToken);
 
                 await _cacheInvalidator.InvalidateLastTenantCache(ownerId!, cancellationToken);
+                await _cacheInvalidator.InvalidateUserTenantsCache(ownerId!, cancellationToken);
 
                 _httpContextAccessor?.HttpContext?.Response.Cookies.Append(AuthConstants.SubDomain, request.SubDomain, new CookieOptions
                 {

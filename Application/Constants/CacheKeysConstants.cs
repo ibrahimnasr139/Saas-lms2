@@ -8,5 +8,6 @@ namespace Application.Constants
     {
         public const string PlanKey = "Plans";
         public const string LastTenantKey = "Last_Tenant";
+        public const string UserTenantsKey = "User_Tenants";
     }
 }

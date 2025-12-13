@@ -1,4 +1,5 @@
 ﻿using Application.Contracts.Caching;
+using Application.Contracts.Repositories;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Hangfire.PostgreSql.Factories;
@@ -69,6 +70,7 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<IPlanRepository, PlanRepository>();
             builder.Services.AddScoped<ITenantRepository, TenantRepository>();
             builder.Services.AddScoped<ICacheInvalidator, CacheInvalidator>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
         }
     }
 }

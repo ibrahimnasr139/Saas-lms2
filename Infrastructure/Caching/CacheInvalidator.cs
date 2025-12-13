@@ -20,5 +20,11 @@ namespace Infrastructure.Caching
             var cacheKey = $"{CacheKeysConstants.LastTenantKey}_{userId}";
             await _hybridCache.RemoveAsync(cacheKey, cancellationToken);
         }
+
+        public async Task InvalidateUserTenantsCache(string userId, CancellationToken cancellationToken = default)
+        {
+            var cacheKey = $"{CacheKeysConstants.UserTenantsKey}_{userId}";
+            await _hybridCache.RemoveAsync(cacheKey, cancellationToken);
+        }
     }
 }
