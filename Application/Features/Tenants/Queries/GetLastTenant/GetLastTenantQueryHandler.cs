@@ -3,32 +3,38 @@ using Application.Constants;
 using Application.Contracts.Repositories;
 using Application.Features.Tenants.Dtos;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Application.Features.Tenants.Queries.GetLastTenant
 {
-    internal sealed class GetLastTenantQueriyHandler : IRequestHandler<GetLastTenantQueriy, LastTenantDto?>
+    internal sealed class GetLastTenantQueryHandler : IRequestHandler<GetLastTenantQuery, LastTenantDto?>
     {
         private readonly ITenantRepository _tenantRepository;
         private readonly ICurrentUserId _currentUserId;
         private readonly HybridCache _hybridCache;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public GetLastTenantQueriyHandler(ITenantRepository tenantRepository, ICurrentUserId currentUserId, HybridCache hybridCache)
+        public GetLastTenantQueryHandler(ITenantRepository tenantRepository, ICurrentUserId currentUserId, HybridCache hybridCache, 
+            IHttpContextAccessor httpContextAccessor)
         {
             _tenantRepository = tenantRepository;
             _currentUserId = currentUserId;
             _hybridCache = hybridCache;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<LastTenantDto?> Handle(GetLastTenantQueriy request, CancellationToken cancellationToken)
+        public async Task<LastTenantDto?> Handle(GetLastTenantQuery request, CancellationToken cancellationToken)
         {
             var userId = _currentUserId.GetUserId();
+            var sunDomain = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SubDomain];
             var cacheKey = $"{CacheKeysConstants.LastTenantKey}_{userId}";
+
             var tenant = await _hybridCache.GetOrCreateAsync(
                 cacheKey,
-                async ct => await _tenantRepository.GetLastTenantAsync(userId, ct),
+                async ct => await _tenantRepository.GetLastTenantAsync(sunDomain, ct),
                 new HybridCacheEntryOptions
                 {
                     Expiration = TimeSpan.FromHours(1),

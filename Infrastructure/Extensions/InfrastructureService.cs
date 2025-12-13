@@ -1,12 +1,6 @@
-﻿using Application.Contracts.Caching;
-using Application.Contracts.Repositories;
-using Hangfire;
+﻿using Hangfire;
 using Hangfire.PostgreSql;
-using Hangfire.PostgreSql.Factories;
-using Infrastructure.Caching;
-using Infrastructure.Common.Options;
 using Infrastructure.Health;
-using Infrastructure.Persistence;
 using Infrastructure.Repositories;
 using Infrastructure.Seeders;
 using Infrastructure.Services;
@@ -14,12 +8,8 @@ using Infrastructure.Services.AuthServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Extensions
 {
@@ -69,7 +59,6 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<ISeeder, Seeder>();
             builder.Services.AddScoped<IPlanRepository, PlanRepository>();
             builder.Services.AddScoped<ITenantRepository, TenantRepository>();
-            builder.Services.AddScoped<ICacheInvalidator, CacheInvalidator>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
         }
     }

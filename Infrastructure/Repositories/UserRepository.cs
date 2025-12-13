@@ -19,7 +19,6 @@ namespace Infrastructure.Repositories
             return await _context.TenantMembers
                 .AsNoTracking()
                 .Where(tm => tm.UserId == userId && tm.IsActive)
-                .OrderByDescending(tm => tm.JoinedAt)
                 .ProjectTo<UserTenantsDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }

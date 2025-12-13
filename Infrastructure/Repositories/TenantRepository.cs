@@ -84,16 +84,12 @@ namespace Infrastructure.Repositories
             _transaction = null;
         }
 
-        public async Task<LastTenantDto?> GetLastTenantAsync(string userId, CancellationToken cancellationToken)
+        public async Task<LastTenantDto?> GetLastTenantAsync(string? subDomain ,CancellationToken cancellationToken)
         {
-            var lastTenant = await _dbContext.TenantMembers
+            return await _dbContext.Tenants
                 .AsNoTracking()
-                .Where(tm => tm.UserId == userId && tm.IsActive)
-                .OrderByDescending(tm => tm.JoinedAt)
-                .Select(tm => tm.Tenant)
                 .ProjectTo<LastTenantDto>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync(cancellationToken);
-            return lastTenant;
+                .FirstOrDefaultAsync(t => t.SubDomain == subDomain ,cancellationToken);
         }
     }
 }

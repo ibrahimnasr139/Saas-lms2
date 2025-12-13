@@ -12,8 +12,8 @@ namespace Application.Contracts.Repositories
         Task<TenantRole?> FindTenantRoleByTenantId(int tenantId, string roleName, CancellationToken cancellationToken);
         Task AddTenantMemberAsync(TenantMember member, CancellationToken cancellationToken);
         Task SaveAsync(CancellationToken cancellationToken);
-        
-        Task<LastTenantDto?> GetLastTenantAsync(string userId, CancellationToken cancellationToken);
+
+        Task<LastTenantDto?> GetLastTenantAsync(string? subDomain, CancellationToken cancellationToken);
 
 
         Task BeginTransactionAsync(CancellationToken cancellationToken);

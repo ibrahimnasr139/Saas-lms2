@@ -22,7 +22,7 @@ namespace Api.Controllers
         [HttpGet("")]
         public async Task<IActionResult> GetLastTenant(CancellationToken cancellationToken)
         {
-            var tenant = await _mediator.Send(new GetLastTenantQueriy(), cancellationToken);
+            var tenant = await _mediator.Send(new GetLastTenantQuery(), cancellationToken);
             return Ok(tenant);
         }
     }

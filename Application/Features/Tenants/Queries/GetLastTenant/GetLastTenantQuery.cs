@@ -2,5 +2,5 @@
 
 namespace Application.Features.Tenants.Queries.GetLastTenant
 {
-    public sealed record GetLastTenantQueriy() : IRequest<LastTenantDto?>;
+    public sealed record GetLastTenantQuery : IRequest<LastTenantDto?>;
 }
