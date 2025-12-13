@@ -9,8 +9,7 @@ namespace Application.Features.Users.Dtos
         public UserProfile()
         {
             CreateMap<ApplicationUser, UserProfileDto>();
-
+           
         }
-
     }
 }

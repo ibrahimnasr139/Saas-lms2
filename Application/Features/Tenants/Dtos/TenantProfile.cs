@@ -18,6 +18,14 @@ namespace Application.Features.Tenants.Dtos
             CreateMap<CreateOnboardingCommand, TenantMember>();
 
 
+            CreateMap<Tenant, LastTenantDto>()
+                .ForMember(dest => dest.Subjects, opt => opt.MapFrom(src => src.Subjects))
+                .ForMember(dest => dest.TeachingLevels, opt => opt.MapFrom(src => src.TeachingLevels))
+                .ForMember(dest => dest.Grades, opt => opt.MapFrom(src => src.Grades));
+            CreateMap<Subject, LabelValueIdDto>();
+            CreateMap<TeachingLevel, LabelValueIdDto>();
+            CreateMap<Grade, LabelValueIdDto>();
+
         }
     }
 }

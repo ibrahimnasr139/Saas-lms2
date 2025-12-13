@@ -1,25 +1,21 @@
-﻿using Application.Contracts.Repositories;
+﻿using Application.Features.Tenants.Dtos;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain.Constants;
-using Domain.Entites;
-using Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
     internal sealed class TenantRepository : ITenantRepository
     {
         private readonly AppDbContext _dbContext;
+        private readonly IMapper _mapper;
         private IDbContextTransaction? _transaction;
 
-        public TenantRepository(AppDbContext dbContext)
+        public TenantRepository(AppDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         public async Task AddTenantMemberAsync(TenantMember tenantMember, CancellationToken cancellationToken)
@@ -86,6 +82,18 @@ namespace Infrastructure.Repositories
             await _transaction.RollbackAsync(cancellationToken);
             await _transaction.DisposeAsync();
             _transaction = null;
+        }
+
+        public async Task<LastTenantDto?> GetLastTenantAsync(string userId, CancellationToken cancellationToken)
+        {
+            var lastTenant = await _dbContext.TenantMembers
+                .AsNoTracking()
+                .Where(tm => tm.UserId == userId && tm.IsActive)
+                .OrderByDescending(tm => tm.JoinedAt)
+                .Select(tm => tm.Tenant)
+                .ProjectTo<LastTenantDto>(_mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync(cancellationToken);
+            return lastTenant;
         }
     }
 }

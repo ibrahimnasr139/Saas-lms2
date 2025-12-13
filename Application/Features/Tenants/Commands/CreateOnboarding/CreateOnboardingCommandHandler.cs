@@ -8,6 +8,7 @@ using System.Text;
 using Domain.Constants;
 using Application.Constants;
 using Application.Common;
+using Application.Contracts.Caching;
 
 namespace Application.Features.Tenants.Commands.CreateOnboarding
 {
@@ -18,15 +19,17 @@ namespace Application.Features.Tenants.Commands.CreateOnboarding
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ICurrentUserId _currentUserId;
+        private readonly ICacheInvalidator _cacheInvalidator;
 
         public CreateOnboardingCommandHandler(ITenantRepository tenantRepository, IMapper mapper, IHttpContextAccessor httpContextAccessor
-            , UserManager<ApplicationUser> userManager, ICurrentUserId currentUserId)
+            , UserManager<ApplicationUser> userManager, ICurrentUserId currentUserId, ICacheInvalidator cacheInvalidator)
         {
             _tenantRepository = tenantRepository;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
             _userManager = userManager;
             _currentUserId = currentUserId;
+            _cacheInvalidator = cacheInvalidator;
         }
 
         public async Task<OneOf<OnboardingDto, Error>> Handle(CreateOnboardingCommand request, CancellationToken cancellationToken)
@@ -61,6 +64,8 @@ namespace Application.Features.Tenants.Commands.CreateOnboarding
                 await _userManager.AddToRoleAsync(user!, RolesConstants.Owner);
                 
                 await _tenantRepository.CommitTransactionAsync(cancellationToken);
+
+                await _cacheInvalidator.InvalidateLastTenantCache(ownerId!, cancellationToken);
 
                 _httpContextAccessor?.HttpContext?.Response.Cookies.Append(AuthConstants.SubDomain, request.SubDomain, new CookieOptions
                 {
