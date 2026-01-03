@@ -20,6 +20,7 @@ namespace Infrastructure.Repositories
         public async Task<IEnumerable<PlanResponse>> GetAllPlansWithDetailsAsync(CancellationToken cancellationToken)
         {
             return await _context.Plans
+                    .Where(p => p.Slug != "free-trial")
                     .AsNoTracking()
                     .ProjectTo<PlanResponse>(_mapper.ConfigurationProvider) 
                     .ToListAsync(cancellationToken);
