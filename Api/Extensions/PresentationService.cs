@@ -37,7 +37,7 @@ namespace Api.Extensions
                     options.AddDefaultPolicy(
                         policy =>
                         {
-                            policy.WithOrigins(builder.Configuration.GetSection(AuthConstants.AllowedOrigins).Get<string[]>()!)
+                           policy.WithOrigins(builder.Configuration.GetSection(AuthConstants.AllowedOrigins).Get<string[]>()!)
                                    .AllowAnyHeader()
                                    .AllowAnyMethod()
                                    .AllowCredentials()

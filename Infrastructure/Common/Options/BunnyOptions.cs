@@ -10,7 +10,5 @@ namespace Infrastructure.Common.Options
         public string StorageZoneName { get; set; } = string.Empty;
         public string CdnUrl { get; set; } = string.Empty;
         public string HostUrl { get; set; } = string.Empty;
-        public int ExpiryMinutes { get; set; }
-
-    }
+        }
 }

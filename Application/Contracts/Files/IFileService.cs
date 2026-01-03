@@ -12,6 +12,5 @@ namespace Application.Contracts.Files
         string GetPath(string fileId, string name, string folder);
         string CreateUploadUrl(string path);
         string CreateCdnUrl(string path);
-        (string AccessKey, int ExpiresInMinutes) GetAccessKey();
     }
 }

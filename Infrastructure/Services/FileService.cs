@@ -2,6 +2,7 @@
 using Domain.Enums;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 using System.Web;
 
@@ -20,7 +21,8 @@ namespace Infrastructure.Services
         public string CreateCdnUrl(string path)
         {
             var cdnUrl = _bunnyOptions.Value.CdnUrl;
-            return $"{cdnUrl}{HttpUtility.UrlPathEncode(path)}";
+            var encodedPath = HttpUtility.UrlPathEncode(path);
+            return $"{cdnUrl}{encodedPath}"; 
         }
 
         public string CreateUploadUrl(string path)
@@ -29,12 +31,6 @@ namespace Infrastructure.Services
             var storageZoneName = _bunnyOptions.Value.StorageZoneName;
             return $"{hostUrl}{storageZoneName}/{HttpUtility.UrlPathEncode(path)}";
         }
-
-        public (string AccessKey, int ExpiresInMinutes) GetAccessKey()
-        {
-            return (_bunnyOptions.Value.AccessKey, _bunnyOptions.Value.ExpiryMinutes);
-        }
-
         public long GetMaxSize(FileType fileType) =>
             fileType == FileType.Video ? _options.Value.VideoMaxSize : (fileType == FileType.Image ? _options.Value.ImageMaxSize : _options.Value.DocumentMaxSize);
 

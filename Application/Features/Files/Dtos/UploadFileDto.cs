@@ -6,12 +6,9 @@ namespace Application.Features.Files.Dtos
 {
     public sealed class UploadFileDto
     {
-        public string AccessKey { get; init; } = string.Empty;
         public string UploadUrl { get; init; } = string.Empty;
         public string CdnUrl { get; init; } = string.Empty;
-
         public string Path { get; init; } = string.Empty;
         public Dictionary<string, string>? Metadata { get; init; }
-        public DateTime ExpiresAt { get; init; }
     }
 }

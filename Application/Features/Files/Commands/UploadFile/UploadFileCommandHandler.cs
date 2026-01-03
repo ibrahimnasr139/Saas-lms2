@@ -28,7 +28,6 @@ namespace Application.Features.Files.Commands.UploadFile
             var uploadUrl = _fileService.CreateUploadUrl(path);
             var cdnUrl = _fileService.CreateCdnUrl(path);
             var userId = _currentUserId.GetUserId();
-            var keys = _fileService.GetAccessKey();
             var file = _mapper.Map<Domain.Entites.File>(request, opt =>
             {
                 opt.AfterMap((src, dest) =>
@@ -46,8 +45,6 @@ namespace Application.Features.Files.Commands.UploadFile
                 CdnUrl = cdnUrl,
                 Path = path,
                 Metadata = request.Metadata,
-                ExpiresAt = DateTime.UtcNow.AddMinutes(keys.ExpiresInMinutes),
-                AccessKey = keys.AccessKey
             };
         }
     }
