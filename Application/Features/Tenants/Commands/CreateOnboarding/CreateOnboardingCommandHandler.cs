@@ -89,12 +89,14 @@ namespace Application.Features.Tenants.Commands.CreateOnboarding
                 {
                     HttpOnly = true,
                     Secure = true,
-                    SameSite = SameSiteMode.None
+                    SameSite = SameSiteMode.None,
+                    Domain = AuthConstants.CookieDomain,
+                    IsEssential = true
                 });
 
                 return new OnboardingDto
                 {
-                    SubDomain = request.SubDomain
+                    Subdomain = request.SubDomain
                 };
             }
             catch

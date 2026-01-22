@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Application.Constants
+﻿namespace Application.Constants
 {
     public static class AuthConstants
     {
@@ -10,7 +6,8 @@ namespace Application.Constants
         public const string RefreshToken = "RefreshToken";
         public const string ApiScheme = "ApiScheme";
         public const string AllowedOrigins = "AllowedOrigins";
-        public const string SubDomain = "SubDomain";
+        public const string SubDomain = "subdomain";
         public const string VerificationCode = "ExtraInfo";
+        public const string CookieDomain = ".waey.online";
     }
 }

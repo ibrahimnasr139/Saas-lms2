@@ -22,7 +22,7 @@ namespace Api.Controllers
         {
             var result = await _mediator.Send(command, cancellationToken);
             return result.Match<IActionResult>(
-                onboardingDto => Ok(onboardingDto),
+                onboardingDto => Created(string.Empty, onboardingDto),
                 error => StatusCode((int)error.HttpStatusCode, error.Message));
         }
     }

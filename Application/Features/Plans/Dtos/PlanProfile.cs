@@ -9,8 +9,8 @@ namespace Application.Features.Plan.DTOs
     {
         public PlanProfile()
         {
-            CreateMap<Domain.Entites.Plan, PlanResponse>()
-             .ForMember(dest => dest.PlanPricings, opt => opt.MapFrom(src => src.PlanPricings))
+            CreateMap<Domain.Entites.Plan, PlanDto>()
+             .ForMember(dest => dest.PlanPricing, opt => opt.MapFrom(src => src.PlanPricings))
              .ForMember(dest => dest.PlanFeatures, opt => opt.MapFrom(src => src.PlanFeatures));
 
             CreateMap<PlanPricing, PlanPricingResponse>()

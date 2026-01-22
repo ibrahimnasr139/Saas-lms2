@@ -10,5 +10,6 @@ namespace Application.Constants
         public const string ForgetPasswordTemplate = "ForgetPasswordTemplate";
         public const string ResetPasswordSubject = "Reset Your Password";
         public const string EmailConfirmationSubject = "Email Confirmation";
+        public const string ForgetPasswordUrl = "https://www.waey.online/auth/reset-password";
     }
 }

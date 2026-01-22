@@ -1,13 +1,14 @@
-﻿using Application.Features.Plan.DTOs;
-using Microsoft.Extensions.Caching.Hybrid;
+﻿using Application.Constants;
+using Application.Contracts.Repositories;
+using Application.Features.Plan.DTOs;
+using Application.Features.Plans.Dtos;
 using AutoMapper;
 using MediatR;
-using Application.Contracts.Repositories;
-using Application.Constants;
+using Microsoft.Extensions.Caching.Hybrid;
 
 namespace Application.Features.Plans.Queries.GetAllPlans
 {
-    public sealed class GetAllPlansQueryHandler : IRequestHandler<GetAllPlansQuery, IEnumerable<PlanResponse>>
+    public sealed class GetAllPlansQueryHandler : IRequestHandler<GetAllPlansQuery, PlansResponseDto>
     {
         private readonly IMapper _mapper;
         private readonly IPlanRepository _planRepository;
@@ -20,7 +21,7 @@ namespace Application.Features.Plans.Queries.GetAllPlans
             _hybridCache = hybridCache;
         }
 
-        public async Task<IEnumerable<PlanResponse>> Handle(GetAllPlansQuery request, CancellationToken cancellationToken)
+        public async Task<PlansResponseDto> Handle(GetAllPlansQuery request, CancellationToken cancellationToken)
         {
             var cacheKey = CacheKeysConstants.PlanKey;
 
@@ -29,7 +30,7 @@ namespace Application.Features.Plans.Queries.GetAllPlans
                 async cacheEntry =>
                 {
                     var data = await _planRepository.GetAllPlansWithDetailsAsync(cancellationToken);
-                    return _mapper.Map<IEnumerable<PlanResponse>>(data);
+                    return new PlansResponseDto { Plans = data.ToList() };
                 },
                 cancellationToken: cancellationToken
             );

@@ -1,11 +1,6 @@
 ﻿using Application.Constants;
 using Application.Contracts.Repositories;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Features.Auth.Commands.Logout
 {
@@ -28,13 +23,13 @@ namespace Application.Features.Auth.Commands.Logout
             }
             var refreshToken = httpContext.Request.Cookies[AuthConstants.RefreshToken];
             var token = await _refreshRepository.GetRefreshTokenAsync(refreshToken!, cancellationToken);
-            if(token is not null)
+            if (token is not null)
             {
                 token.RevokedAt = DateTime.UtcNow;
             }
             await _refreshRepository.SaveAsync(cancellationToken);
-            httpContext.Response.Cookies.Delete(AuthConstants.AccessToken);
-            httpContext.Response.Cookies.Delete(AuthConstants.RefreshToken);
+            httpContext.Response.Cookies.Delete(AuthConstants.AccessToken, new CookieOptions { Domain = AuthConstants.CookieDomain });
+            httpContext.Response.Cookies.Delete(AuthConstants.RefreshToken, new CookieOptions { Domain = AuthConstants.CookieDomain });
             return true;
         }
     }

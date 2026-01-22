@@ -7,7 +7,7 @@ namespace Application.Contracts.Repositories
 {
     public interface IPlanRepository
     {
-        Task<IEnumerable<PlanResponse>> GetAllPlansWithDetailsAsync(CancellationToken cancellationToken);
+        Task<IEnumerable<PlanDto>> GetAllPlansWithDetailsAsync(CancellationToken cancellationToken);
         Task<Guid> GetFreePlanPricingIdAsync(CancellationToken cancellationToken);
 
     }

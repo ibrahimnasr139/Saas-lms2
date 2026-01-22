@@ -1,10 +1,6 @@
 ﻿using Application.Constants;
 using Application.Helpers;
 using Hangfire;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Features.Auth.Commands.ForgetPassword
 {
@@ -31,7 +27,7 @@ namespace Application.Features.Auth.Commands.ForgetPassword
                 return true;
             }
             var otpCode = new Random().Next(100000, 999999).ToString();
-            await _hybridCache.SetAsync(otpCode,user.Id, new HybridCacheEntryOptions
+            await _hybridCache.SetAsync(otpCode, user.Id, new HybridCacheEntryOptions
             {
                 Expiration = TimeSpan.FromMinutes(2)
             }, cancellationToken: cancellationToken);
@@ -39,7 +35,7 @@ namespace Application.Features.Auth.Commands.ForgetPassword
             var emailBody = EmailConfirmationHelper.GenerateEmailBodyHelper(EmailConstants.ForgetPasswordTemplate, new Dictionary<string, string>
             {
                 { "{{name}}", user.FirstName },
-                 { "{{action_url}}", $"/identity/forget-password?id={user.Id}&token={otpCode}" }
+                { "{{action_url}}", $"{EmailConstants.ForgetPasswordUrl}?token={otpCode}" }
             });
             BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(user.Email!, EmailConstants.ResetPasswordSubject, emailBody));
             return true;

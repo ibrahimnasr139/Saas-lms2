@@ -1,9 +1,6 @@
-﻿
-using Application.Constants;
+﻿using Application.Constants;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -42,7 +39,8 @@ namespace Infrastructure.Services.AuthServices
                     Secure = true,
                     SameSite = SameSiteMode.None,
                     IsEssential = true,
-                    Expires = DateTimeOffset.Now.AddMinutes(_options.Value.ExpiryMinutes)
+                    Expires = DateTimeOffset.Now.AddMinutes(_options.Value.ExpiryMinutes),
+                    Domain = AuthConstants.CookieDomain
                 }
                 );
         }
@@ -58,7 +56,8 @@ namespace Infrastructure.Services.AuthServices
                     Secure = true,
                     SameSite = SameSiteMode.None,
                     IsEssential = true,
-                    Expires = expiresOn
+                    Expires = expiresOn,
+                    Domain = AuthConstants.CookieDomain
                 }
                 );
             return (refreshToken, expiresOn);
