@@ -1,11 +1,13 @@
-using Hangfire;
-using Serilog;
-using Infrastructure.Extensions;
-using Application.Extensions;
 using Api.Extensions;
 using Application.Constants;
-using Microsoft.OpenApi;
+using Application.Extensions;
+using Hangfire;
+using Infrastructure.Extensions;
+using Infrastructure.Persistence;
 using Infrastructure.Seeders;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,16 +15,31 @@ builder.AddPresentationServices();
 builder.AddApplicationServices();
 builder.AddInfrastructureServices(builder.Configuration);
 
-
-
-
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var planSeeder = scope.ServiceProvider.GetRequiredService<ISeeder>();
-    await planSeeder.SeedAsync();
+    var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
+
+    try
+    {
+        var dbContext = services.GetRequiredService<AppDbContext>();
+        logger.LogInformation("Applying pending migrations (if any)...");
+        await dbContext.Database.MigrateAsync();
+        logger.LogInformation("Migrations applied successfully.");
+
+        var seedingData = services.GetRequiredService<ISeeder>();
+        await seedingData.SeedAsync();
+        logger.LogInformation("Database seeding completed successfully!");
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "An error occurred while migrating or seeding the database.");
+        throw;
+    }
 }
+
 
 // Configure the HTTP request pipeline.
 app.UseExceptionHandler();

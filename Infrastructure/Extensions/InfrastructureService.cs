@@ -9,9 +9,9 @@ using Infrastructure.Services.AuthServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 
 namespace Infrastructure.Extensions
 {
@@ -21,11 +21,22 @@ namespace Infrastructure.Extensions
         {
             builder.Services.AddDbContextPool<AppDbContext>(options =>
             {
-                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+                var connectionString = BuildPostgresConnectionString(configuration);
+                options.UseNpgsql(connectionString);
             });
             builder.Services.AddStackExchangeRedisCache(options =>
             {
-                options.Configuration = configuration.GetConnectionString("RedisConnection");
+                var redisUrl = Environment.GetEnvironmentVariable("REDIS_URL")
+                    ?? configuration.GetConnectionString("RedisConnection");
+
+                if (redisUrl?.StartsWith("redis://") == true)
+                {
+                    var uri = new Uri(redisUrl);
+                    var password = uri.UserInfo.Split(':').LastOrDefault();
+                    redisUrl = $"{uri.Host}:{uri.Port},password={password},ssl=false";
+                }
+
+                options.Configuration = redisUrl;
             });
             builder.Services.AddHybridCache();
             builder.Services.AddOptions<JwtOptions>()
@@ -46,19 +57,25 @@ namespace Infrastructure.Extensions
                 .ValidateOnStart();
 
             builder.Services.AddHangfire(config =>
+            {
+                var connectionString = BuildPostgresConnectionString(configuration);
+
                 config.SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
-                      .UseSimpleAssemblyNameTypeSerializer()
-                      .UseRecommendedSerializerSettings()
-                      .UsePostgreSqlStorage(action => action.UseNpgsqlConnection(configuration.GetConnectionString("HangfireConnection")))
-            );
+                    .UseSimpleAssemblyNameTypeSerializer()
+                    .UseRecommendedSerializerSettings()
+                    .UsePostgreSqlStorage(options =>
+                        options.UseNpgsqlConnection(connectionString));
+            });
 
             builder.Services.AddHangfireServer();
 
             builder.Services.AddHealthChecks()
-                .AddNpgSql(configuration.GetConnectionString("DefaultConnection")!)
-                .AddHangfire(options => options.MinimumAvailableServers = 1)
-                .AddRedis(configuration.GetConnectionString("RedisConnection")!)
-                .AddCheck<MailHealthCheck>("mail service");
+                   .AddNpgSql(BuildPostgresConnectionString(configuration))
+                   .AddHangfire(options => options.MinimumAvailableServers = 1)
+                   .AddRedis(Environment.GetEnvironmentVariable("REDIS_URL")
+                       ?? configuration.GetConnectionString("RedisConnection")!)
+                   .AddCheck<MailHealthCheck>("mail service");
+
             builder.Services.AddScoped<IEmailSender, EmailSender>();
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
@@ -73,6 +90,28 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<IFileRepository, FileRepository>();
             builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
             builder.Services.AddScoped<IFileService, FileService>();
+        }
+        public static string BuildPostgresConnectionString(IConfiguration configuration)
+        {
+            var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+            if (!string.IsNullOrWhiteSpace(databaseUrl))
+            {
+                var uri = new Uri(databaseUrl);
+                var userInfo = uri.UserInfo.Split(':');
+
+                return new NpgsqlConnectionStringBuilder
+                {
+                    Host = uri.Host,
+                    Port = uri.Port,
+                    Username = userInfo[0],
+                    Password = userInfo[1],
+                    Database = uri.AbsolutePath.Trim('/'),
+                    SslMode = SslMode.Require
+                }.ToString();
+            }
+
+            return configuration.GetConnectionString("DefaultConnection")!;
         }
     }
 }

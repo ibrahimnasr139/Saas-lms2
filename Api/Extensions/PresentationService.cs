@@ -4,7 +4,6 @@ using Infrastructure.Common.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using Npgsql;
 using Serilog;
 using System.Text;
 using System.Text.Json;
@@ -17,77 +16,72 @@ namespace Api.Extensions
         public static void AddPresentationServices(this WebApplicationBuilder builder)
         {
             builder.Services.AddControllers()
-                .AddJsonOptions(
-                    options =>
-                    {
-                        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
-                    }
-                );
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+                });
+
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddExceptionHandler<GlobalExceptionHandler>().AddProblemDetails();
-            builder.Host.UseSerilog(
-                (context, services, configuration) =>
+
+            builder.Host.UseSerilog((context, services, configuration) =>
                 configuration.ReadFrom.Configuration(context.Configuration)
                     .ReadFrom.Services(services)
             );
-            builder.Services.AddCors(
-                options =>
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(policy =>
                 {
-                    options.AddDefaultPolicy(
-                        policy =>
-                        {
-                           policy.WithOrigins(builder.Configuration.GetSection(AuthConstants.AllowedOrigins).Get<string[]>()!)
-                                   .AllowAnyHeader()
-                                   .AllowAnyMethod()
-                                   .AllowCredentials()
-                                   ;
-                               // .SetPreflightMaxAge(TimeSpan.FromMinutes(10));
-                        }
-                    );
-                }
-                );
+                    var allowedOrigins = builder.Configuration.GetSection(AuthConstants.AllowedOrigins).Get<string[]>()
+                        ?? new[] { "https://waey.online" };
+
+                    policy.WithOrigins(allowedOrigins)
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials()
+                        .SetPreflightMaxAge(TimeSpan.FromMinutes(10));
+                });
+            });
+
             var jwtSettings = builder.Configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
-            builder.Services.AddAuthentication(
-               options =>
-               {
-                   options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                   options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-               })
-             .AddJwtBearer(AuthConstants.ApiScheme,
-               options =>
-               {
-                   options.SaveToken = true;
-                   options.TokenValidationParameters = new TokenValidationParameters
-                   {
-                       ValidateIssuer = true,
-                       ValidateAudience = true,
-                       ValidateLifetime = true,
-                       ValidateIssuerSigningKey = true,
-                       IssuerSigningKey = new SymmetricSecurityKey(
-                           Encoding.UTF8.GetBytes(jwtSettings?.SecretKey!)
-                       ),
-                       ValidIssuer = jwtSettings?.Issuer,
-                       ValidAudience = jwtSettings?.Audience,
-                   };
-                   options.Events = new JwtBearerEvents
-                   {
-                       OnMessageReceived = context =>
-                       {
-                           context.Token = context.Request.Cookies[AuthConstants.AccessToken];
-                           return Task.CompletedTask;
-                       }
-                   };
-               }
-           );
-            builder.Services.AddAuthorization();
-            builder.Services.Configure<IdentityOptions>(
-                options =>
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(AuthConstants.ApiScheme, options =>
+            {
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    options.SignIn.RequireConfirmedEmail = true;
-                    options.User.RequireUniqueEmail = true;
-                }
-            );
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings?.SecretKey!)),
+                    ValidIssuer = jwtSettings?.Issuer,
+                    ValidAudience = jwtSettings?.Audience,
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        context.Token = context.Request.Cookies[AuthConstants.AccessToken];
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+
+            builder.Services.AddAuthorization();
+
+            builder.Services.Configure<IdentityOptions>(options =>
+            {
+                options.SignIn.RequireConfirmedEmail = true;
+                options.User.RequireUniqueEmail = true;
+            });
         }
     }
 }
