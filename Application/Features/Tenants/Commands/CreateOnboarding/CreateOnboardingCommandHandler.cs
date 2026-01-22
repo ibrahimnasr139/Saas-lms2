@@ -64,6 +64,10 @@ namespace Application.Features.Tenants.Commands.CreateOnboarding
                 var createdTenantId = await _tenantRepository.CreateTenantAsync(tenant, cancellationToken);
 
                 _mapper.Map(request, user!);
+
+                user!.HasOnboarded = true;
+                await _userManager.UpdateAsync(user);
+
                 var freePlanPricingId = await _planRepository.GetFreePlanPricingIdAsync(cancellationToken);
                 await _subscriptionRepository.CreateFreeSubcscription(createdTenantId, freePlanPricingId, cancellationToken);
 
