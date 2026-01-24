@@ -1,9 +1,5 @@
 ﻿using Application.Contracts.Files;
 using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
 using System.Web;
 
 namespace Infrastructure.Services
@@ -22,7 +18,7 @@ namespace Infrastructure.Services
         {
             var cdnUrl = _bunnyOptions.Value.CdnUrl;
             var encodedPath = HttpUtility.UrlPathEncode(path);
-            return $"{cdnUrl}{encodedPath}"; 
+            return $"{cdnUrl}{encodedPath}";
         }
 
         public string CreateUploadUrl(string path)

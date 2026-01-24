@@ -1,9 +1,6 @@
 ﻿using Application.Features.Plan.DTOs;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Repositories
 {

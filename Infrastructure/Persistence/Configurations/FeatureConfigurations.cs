@@ -1,7 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Persistence.Configurations
 {
@@ -15,7 +12,7 @@ namespace Infrastructure.Persistence.Configurations
                    .HasMaxLength(200)
                    .IsRequired();
 
-            builder.Property(f => f.Key) 
+            builder.Property(f => f.Key)
                    .HasMaxLength(100)
                    .IsRequired();
 

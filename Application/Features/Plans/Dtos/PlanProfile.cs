@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AutoMapper;
-using Domain.Entites;
-namespace Application.Features.Plan.DTOs
+﻿namespace Application.Features.Plan.DTOs
 {
     public sealed class PlanProfile : Profile
     {

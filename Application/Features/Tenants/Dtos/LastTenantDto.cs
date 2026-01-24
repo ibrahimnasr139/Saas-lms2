@@ -1,9 +1,4 @@
-﻿using Domain.Entites;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Application.Features.Tenants.Dtos
+﻿namespace Application.Features.Tenants.Dtos
 {
     public sealed class LastTenantDto
     {
@@ -12,7 +7,7 @@ namespace Application.Features.Tenants.Dtos
         public string? Logo { get; set; }
         public List<LabelValueIdDto> Subjects { get; set; }
         public List<LabelValueIdDto> TeachingLevels { get; set; }
-        public List<LabelValueIdDto> Grades { get; set; } 
+        public List<LabelValueIdDto> Grades { get; set; }
         public string SubDomain { get; set; } = string.Empty;
     }
 }

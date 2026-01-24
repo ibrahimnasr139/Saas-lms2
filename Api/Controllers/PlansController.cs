@@ -1,6 +1,5 @@
 ﻿using Application.Features.Plans.Queries.GetAllPlans;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers

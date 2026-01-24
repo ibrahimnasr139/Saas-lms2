@@ -1,8 +1,4 @@
-﻿using Application.Features.Files.Dtos;
-using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Domain.Enums;
 
 namespace Application.Contracts.Files
 {

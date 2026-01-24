@@ -1,8 +1,4 @@
 ﻿using Application.Features.Auth.Commands.Signup;
-using Domain.Entites;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Features.Auth.Dtos
 {

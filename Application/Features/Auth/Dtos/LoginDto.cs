@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Application.Features.Auth.Dtos
+﻿namespace Application.Features.Auth.Dtos
 {
     public sealed class LoginDto
     {

@@ -1,9 +1,5 @@
 ﻿using Domain.Abstractions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Persistence
 {
@@ -13,7 +9,7 @@ namespace Infrastructure.Persistence
         internal DbSet<Plan> Plans { get; set; }
         internal DbSet<PlanPricing> PlanPricings { get; set; }
         internal DbSet<PlanFeature> PlanFeatures { get; set; }
-        internal DbSet<Feature> Features  { get; set; }
+        internal DbSet<Feature> Features { get; set; }
         internal DbSet<Tenant> Tenants { get; set; }
         internal DbSet<TenantRole> TenantRoles { get; set; }
         internal DbSet<TenantMember> TenantMembers { get; set; }

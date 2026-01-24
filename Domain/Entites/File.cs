@@ -1,8 +1,5 @@
 ﻿using Domain.Abstractions;
 using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Domain.Entites
 {
@@ -10,7 +7,7 @@ namespace Domain.Entites
     {
         public string Id { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
-        public long Size { get; set; } 
+        public long Size { get; set; }
         public FileType Type { get; set; }
         public string Url { get; set; } = string.Empty;
         public string StorageProvider { get; set; } = "Bunny";

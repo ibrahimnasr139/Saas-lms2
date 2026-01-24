@@ -1,11 +1,5 @@
 ﻿using Application.Contracts.Files;
-using Domain.Enums;
 using FluentValidation;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 
 namespace Application.Features.Files.Commands.UploadFile
 {
@@ -15,7 +9,7 @@ namespace Application.Features.Files.Commands.UploadFile
         public UploadFileCommandValidator(IFileService fileService)
         {
             _fileService = fileService;
-            
+
             RuleFor(x => x.Size)
                 .GreaterThan(0).WithMessage("File size must be greater than zero.");
             RuleFor(x => x)

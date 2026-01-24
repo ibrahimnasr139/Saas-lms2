@@ -1,9 +1,4 @@
-﻿using Domain.Entites;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Application.Contracts.Authentication
+﻿namespace Application.Contracts.Authentication
 {
     public interface ITokenProvider
     {

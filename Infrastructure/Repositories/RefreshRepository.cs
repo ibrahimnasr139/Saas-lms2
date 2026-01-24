@@ -1,9 +1,4 @@
-﻿using Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Infrastructure.Repositories
+﻿namespace Infrastructure.Repositories
 {
     internal sealed class RefreshRepository : IRefreshRepository
     {

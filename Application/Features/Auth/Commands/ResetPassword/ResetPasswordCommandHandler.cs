@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Application.Features.Auth.Commands.ResetPassword
+﻿namespace Application.Features.Auth.Commands.ResetPassword
 {
     internal sealed class ResetPasswordCommandHandler :
         IRequestHandler<ResetPasswordCommand, OneOf<bool, Error>>
@@ -32,7 +28,7 @@ namespace Application.Features.Auth.Commands.ResetPassword
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user!);
             var result = await _userManager.ResetPasswordAsync(user!, token, request.Password);
-            if(!result.Succeeded)
+            if (!result.Succeeded)
             {
                 throw new Exception("Something went wrong");
             }

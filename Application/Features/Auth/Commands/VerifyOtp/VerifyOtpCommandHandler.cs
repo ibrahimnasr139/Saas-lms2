@@ -2,10 +2,6 @@
 using Application.Contracts.Authentication;
 using Application.Contracts.Repositories;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Features.Auth.Commands.VerifyOtp
 {
@@ -34,7 +30,7 @@ namespace Application.Features.Auth.Commands.VerifyOtp
             }
             var email = await _hybridCache.GetOrCreateAsync(verificationCode, async entry =>
             {
-               return await Task.FromResult<string?>(null);
+                return await Task.FromResult<string?>(null);
             }, cancellationToken: cancellationToken);
             if (email is null)
             {

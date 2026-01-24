@@ -1,9 +1,4 @@
-﻿using Domain.Entites;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Application.Contracts.Repositories
+﻿namespace Application.Contracts.Repositories
 {
     public interface IRefreshRepository
     {

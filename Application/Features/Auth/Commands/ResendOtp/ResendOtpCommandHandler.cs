@@ -2,9 +2,6 @@
 using Application.Helpers;
 using Hangfire;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Features.Auth.Commands.ResendOtp
 {
@@ -27,7 +24,7 @@ namespace Application.Features.Auth.Commands.ResendOtp
         }
         public async Task<OneOf<bool, Error>> Handle(ResendOtpCommand request, CancellationToken cancellationToken)
         {
-           if(!_httpContextAccessor!.HttpContext!.Request.Cookies.TryGetValue(AuthConstants.VerificationCode, out string code))
+            if (!_httpContextAccessor!.HttpContext!.Request.Cookies.TryGetValue(AuthConstants.VerificationCode, out string code))
             {
                 return UserErrors.InvalidVerificationToken;
             }

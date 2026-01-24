@@ -2,9 +2,6 @@
 using Application.Constants;
 using Application.Contracts.Repositories;
 using Application.Features.Users.Dtos;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Features.Users.Queries.GetTenants
 {

@@ -1,7 +1,4 @@
 ﻿using Application.Features.Files.Commands.UploadFile;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Features.Files.Dtos
 {

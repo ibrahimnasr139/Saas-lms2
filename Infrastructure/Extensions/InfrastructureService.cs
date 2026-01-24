@@ -90,6 +90,7 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<IFileRepository, FileRepository>();
             builder.Services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
             builder.Services.AddScoped<IFileService, FileService>();
+            builder.Services.AddScoped<ITenantMemberRepository, TenantMemberRepository>();
         }
         public static string BuildPostgresConnectionString(IConfiguration configuration)
         {
