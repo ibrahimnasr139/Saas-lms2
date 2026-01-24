@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Application.Constants
+﻿namespace Application.Constants
 {
     public sealed class RoleConstants
     {

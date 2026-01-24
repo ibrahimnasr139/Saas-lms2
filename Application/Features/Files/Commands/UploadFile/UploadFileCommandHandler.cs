@@ -2,9 +2,6 @@
 using Application.Contracts.Files;
 using Application.Contracts.Repositories;
 using Application.Features.Files.Dtos;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Features.Files.Commands.UploadFile
 {

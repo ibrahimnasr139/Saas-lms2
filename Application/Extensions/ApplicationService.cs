@@ -3,9 +3,6 @@ using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Extensions
 {

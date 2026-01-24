@@ -1,7 +1,4 @@
 ﻿using Application.Features.Plan.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Contracts.Repositories
 {

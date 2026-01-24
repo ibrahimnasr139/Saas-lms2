@@ -1,7 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Persistence.Configurations
 {
@@ -22,8 +19,8 @@ namespace Infrastructure.Persistence.Configurations
                    .IsRequired();
 
             builder.Property(pp => pp.BillingCycle)
-                    .HasConversion<string>() 
-                    .HasMaxLength(50)        
+                    .HasConversion<string>()
+                    .HasMaxLength(50)
                     .IsRequired();
 
             builder.Property(pp => pp.CreatedAt)

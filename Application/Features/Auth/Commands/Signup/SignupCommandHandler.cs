@@ -3,12 +3,8 @@ using Application.Constants;
 using Application.Helpers;
 using Hangfire;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 
 namespace Application.Features.Auth.Commands.Signup
 {
@@ -25,7 +21,7 @@ namespace Application.Features.Auth.Commands.Signup
             IMapper mapper,
             IEmailSender emailSender,
             HybridCache hybridCache,
-            ILogger<SignupCommandHandler>logger,
+            ILogger<SignupCommandHandler> logger,
             IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
@@ -40,8 +36,8 @@ namespace Application.Features.Auth.Commands.Signup
             var existingUser = await _userManager.FindByEmailAsync(request.Email);
             if (existingUser is not null)
             {
-                if(existingUser.EmailConfirmed)
-                return UserErrors.UserAlreadyExists;
+                if (existingUser.EmailConfirmed)
+                    return UserErrors.UserAlreadyExists;
             }
             else
             {
@@ -52,8 +48,8 @@ namespace Application.Features.Auth.Commands.Signup
                     var error = string.Join(", ", createUserResult.Errors.Select(e => e.Description).First());
                     return new Error("UserCreationFailed", error, HttpStatusCode.BadRequest);
                 }
+                await _userManager.AddToRoleAsync(newUser, RoleConstants.Tenant);
             }
-            await _userManager.AddToRoleAsync(existingUser!, RoleConstants.Tenant);
             var otpCode = await GenerateOtpHelper.GenerateOtp(request.Email, _hybridCache, _httpContextAccessor, cancellationToken);
             var emailBody = EmailConfirmationHelper.GenerateEmailBodyHelper(EmailConstants.OtpTemplate, new Dictionary<string, string>
             {

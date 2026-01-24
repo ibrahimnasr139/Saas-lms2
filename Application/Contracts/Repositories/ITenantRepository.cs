@@ -1,6 +1,4 @@
 ﻿using Application.Features.Tenants.Dtos;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Application.Contracts.Repositories
 {
@@ -9,7 +7,7 @@ namespace Application.Contracts.Repositories
         Task<bool> IsSubDomainExistsAsync(string subDomain, CancellationToken cancellationToken);
         Task<int> CreateTenantAsync(Tenant tenant, CancellationToken cancellationToken);
         Task<(int ownerRoleId, int assistantRoleId)> AddTenantRoles(int tenantId, CancellationToken cancellationToken);
-        Task AddTenantMemberAsync(TenantMember member, CancellationToken cancellationToken);    
+        Task AddTenantMemberAsync(TenantMember member, CancellationToken cancellationToken);
         Task AssignAssistantPermissions(int assistantRoleId, CancellationToken cancellationToken);
         Task SaveAsync(CancellationToken cancellationToken);
 

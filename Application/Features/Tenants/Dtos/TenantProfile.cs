@@ -1,7 +1,4 @@
 ﻿using Application.Features.Tenants.Commands.CreateOnboarding;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Features.Tenants.Dtos
 {

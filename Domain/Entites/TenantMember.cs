@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Domain.Entites
+﻿namespace Domain.Entites
 {
     public sealed class TenantMember
     {
@@ -16,7 +12,7 @@ namespace Domain.Entites
         public int? InvitedById { get; set; }
         public TenantMember? InvitedBy { get; set; }
         public DateTime JoinedAt { get; set; } = DateTime.UtcNow;
-        public int ExperienceYears { get; set; } 
+        public int ExperienceYears { get; set; }
         public string JobTitle { get; set; } = string.Empty;
         public string? Bio { get; set; }
         public string? DisplayName { get; set; } = string.Empty;

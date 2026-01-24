@@ -1,8 +1,5 @@
 ﻿using Application.Contracts.Authentication;
 using Application.Contracts.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Features.Auth.Commands.Refresh
 {
@@ -32,7 +29,7 @@ namespace Application.Features.Auth.Commands.Refresh
             refreshToken.RevokedAt = DateTime.UtcNow;
             _tokenProvider.GenerateJwtToken(user);
             var newRefreshToken = _tokenProvider.GenerateRefreshToken();
-           _refreshRepository.AddRefreshToken(user, newRefreshToken.token, newRefreshToken.expiresOn, cancellationToken);
+            _refreshRepository.AddRefreshToken(user, newRefreshToken.token, newRefreshToken.expiresOn, cancellationToken);
             await _refreshRepository.SaveAsync(cancellationToken);
             return true;
         }

@@ -4,12 +4,7 @@ using Application.Contracts.Repositories;
 using Application.Helpers;
 using Hangfire;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Features.Auth.Commands.Login
 {
@@ -41,7 +36,7 @@ namespace Application.Features.Auth.Commands.Login
             _hybridCache = hybridCache;
             _logger = logger;
             _httpContextAccessor = httpContextAccessor;
-            _emailSender = emailSender; 
+            _emailSender = emailSender;
         }
 
         public async Task<OneOf<LoginDto, Error>> Handle(LoginCommand request, CancellationToken cancellationToken)

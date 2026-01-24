@@ -1,5 +1,4 @@
-﻿using Domain.Constants;
-using Domain.Enums;
+﻿using Domain.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Seeders
@@ -688,6 +687,6 @@ namespace Infrastructure.Seeders
                 };
         }
 
-        private List<string> GetRoles() => new List<string> {"Student","Tenant", "Parent"};
+        private List<string> GetRoles() => new List<string> { "Student", "Tenant", "Parent" };
     }
 }

@@ -1,15 +1,14 @@
-﻿using Application.Features.Auth.Commands.ForgetPassword;
+﻿using Application.Constants;
+using Application.Features.Auth.Commands.ForgetPassword;
 using Application.Features.Auth.Commands.Login;
+using Application.Features.Auth.Commands.Logout;
 using Application.Features.Auth.Commands.Refresh;
+using Application.Features.Auth.Commands.ResendOtp;
 using Application.Features.Auth.Commands.ResetPassword;
 using Application.Features.Auth.Commands.Signup;
 using Application.Features.Auth.Commands.VerifyOtp;
-using Application.Constants;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Application.Features.Auth.Commands.Logout;
-using Application.Features.Auth.Commands.ResendOtp;
 
 namespace Api.Controllers
 {

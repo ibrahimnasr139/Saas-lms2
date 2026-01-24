@@ -1,8 +1,5 @@
 ﻿using Domain.Abstractions;
 using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Domain.Entites
 {
@@ -12,7 +9,7 @@ namespace Domain.Entites
         public SubscriptionStatus Status { get; set; } = SubscriptionStatus.Active;
         public string? ProviderSubscriptionId { get; set; }
         public string? Provider { get; set; }
-        public bool IsAutoRenew { get; set; } 
+        public bool IsAutoRenew { get; set; }
         public int TenantId { get; set; }
         public Tenant Tenant { get; set; } = null!;
         public Guid PlanPricingId { get; set; }

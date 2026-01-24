@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Application.Features.Plan.DTOs
+﻿namespace Application.Features.Plan.DTOs
 {
     public sealed class PlanDto
     {

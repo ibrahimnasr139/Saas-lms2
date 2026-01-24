@@ -2,11 +2,7 @@
 using Application.Constants;
 using Application.Contracts.Repositories;
 using Application.Features.Tenants.Dtos;
-using MediatR;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Features.Tenants.Queries.GetLastTenant
 {
@@ -17,7 +13,7 @@ namespace Application.Features.Tenants.Queries.GetLastTenant
         private readonly HybridCache _hybridCache;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public GetLastTenantQueryHandler(ITenantRepository tenantRepository, ICurrentUserId currentUserId, HybridCache hybridCache, 
+        public GetLastTenantQueryHandler(ITenantRepository tenantRepository, ICurrentUserId currentUserId, HybridCache hybridCache,
             IHttpContextAccessor httpContextAccessor)
         {
             _tenantRepository = tenantRepository;

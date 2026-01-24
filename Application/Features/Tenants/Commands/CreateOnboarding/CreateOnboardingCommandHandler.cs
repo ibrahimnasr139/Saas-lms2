@@ -1,13 +1,8 @@
-﻿using Application.Contracts.Repositories;
+﻿using Application.Common;
+using Application.Constants;
+using Application.Contracts.Repositories;
 using Application.Features.Tenants.Dtos;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Text;
-using Domain.Constants;
-using Application.Constants;
-using Application.Common;
 
 namespace Application.Features.Tenants.Commands.CreateOnboarding
 {
@@ -60,7 +55,7 @@ namespace Application.Features.Tenants.Commands.CreateOnboarding
                         dest.OwnerId = ownerId!;
                     })
                 );
-              
+
                 var createdTenantId = await _tenantRepository.CreateTenantAsync(tenant, cancellationToken);
 
                 _mapper.Map(request, user!);

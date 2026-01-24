@@ -32,16 +32,16 @@ namespace Infrastructure.Repositories
                 new TenantRole { Name = RolesConstants.Assistant, TenantId = tenantId }
             };
             var ownerRole = await _dbContext.TenantRoles.AddAsync(roles[0], cancellationToken);
-             var assistantRole = await _dbContext.TenantRoles.AddAsync(roles[1], cancellationToken);
-                await SaveAsync(cancellationToken);
+            var assistantRole = await _dbContext.TenantRoles.AddAsync(roles[1], cancellationToken);
+            await SaveAsync(cancellationToken);
             return (ownerRole.Entity.Id, assistantRole.Entity.Id);
         }
 
 
         public async Task<int> CreateTenantAsync(Tenant tenant, CancellationToken cancellationToken)
         {
-           await _dbContext.Tenants.AddAsync(tenant, cancellationToken);
-           await SaveAsync(cancellationToken);
+            await _dbContext.Tenants.AddAsync(tenant, cancellationToken);
+            await SaveAsync(cancellationToken);
             return tenant.Id;
         }
         public async Task<bool> IsSubDomainExistsAsync(string subDomain, CancellationToken cancellationToken)
@@ -82,19 +82,19 @@ namespace Infrastructure.Repositories
             _transaction = null;
         }
 
-        public async Task<LastTenantDto?> GetLastTenantAsync(string? subDomain ,CancellationToken cancellationToken)
+        public async Task<LastTenantDto?> GetLastTenantAsync(string? subDomain, CancellationToken cancellationToken)
         {
             return await _dbContext.Tenants
                 .AsNoTracking()
                 .ProjectTo<LastTenantDto>(_mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync(t => t.SubDomain == subDomain ,cancellationToken);
+                .FirstOrDefaultAsync(t => t.SubDomain == subDomain, cancellationToken);
         }
 
         public async Task AssignAssistantPermissions(int assistantRoleId, CancellationToken cancellationToken)
         {
             var permissions = GetAssistantPermissions().Select(permission => new Permission
             {
-               Id = permission
+                Id = permission
             }).ToList();
             _dbContext.AttachRange(permissions);
             var rolePermissions = permissions.Select(permission => new RolePermission

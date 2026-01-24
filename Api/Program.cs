@@ -1,12 +1,10 @@
 using Api.Extensions;
-using Application.Constants;
 using Application.Extensions;
 using Hangfire;
 using Infrastructure.Extensions;
 using Infrastructure.Persistence;
 using Infrastructure.Seeders;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -1,10 +1,6 @@
 ﻿using Application.Constants;
 using Application.Contracts.Repositories;
-using Application.Features.Plan.DTOs;
 using Application.Features.Plans.Dtos;
-using AutoMapper;
-using MediatR;
-using Microsoft.Extensions.Caching.Hybrid;
 
 namespace Application.Features.Plans.Queries.GetAllPlans
 {
@@ -14,7 +10,7 @@ namespace Application.Features.Plans.Queries.GetAllPlans
         private readonly IPlanRepository _planRepository;
         private readonly HybridCache _hybridCache;
 
-        public GetAllPlansQueryHandler(IMapper mapper , IPlanRepository planRepository , HybridCache hybridCache)
+        public GetAllPlansQueryHandler(IMapper mapper, IPlanRepository planRepository, HybridCache hybridCache)
         {
             _mapper = mapper;
             _planRepository = planRepository;
