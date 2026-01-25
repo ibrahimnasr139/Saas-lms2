@@ -34,10 +34,31 @@ namespace Api.Extensions
             {
                 options.AddDefaultPolicy(policy =>
                 {
-                    var allowedOrigins = builder.Configuration.GetSection(AuthConstants.AllowedOrigins).Get<string[]>()
-                        ?? new[] { "https://waey.online" };
+                    var allowedOrigins = builder.Configuration
+                        .GetSection(AuthConstants.AllowedOrigins)
+                        .Get<string[]>() ?? new[] { "waey.online" };
 
-                    policy.WithOrigins(allowedOrigins)
+                    policy
+                        .SetIsOriginAllowed(origin =>
+                        {
+                            if (string.IsNullOrWhiteSpace(origin))
+                                return false;
+                            try
+                            {
+                                var uri = new Uri(origin);
+                                foreach (var allowedDomain in allowedOrigins)
+                                {
+                                    if (uri.Host.Equals(allowedDomain, StringComparison.OrdinalIgnoreCase) ||
+                                        uri.Host.EndsWith($".{allowedDomain}", StringComparison.OrdinalIgnoreCase))
+                                        return true;
+                                }
+                                return false;
+                            }
+                            catch
+                            {
+                                return false;
+                            }
+                        })
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials()
