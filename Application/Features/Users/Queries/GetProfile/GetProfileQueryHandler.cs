@@ -14,18 +14,15 @@ namespace Application.Features.Users.Queries.GetProfile
         private readonly IMapper _mapper;
         private readonly ISubscriptionRepository _subscriptionRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILogger<GetProfileQueryHandler> _logger;
 
         public GetProfileQueryHandler(UserManager<ApplicationUser> userManager, ICurrentUserId currentUserId
-            , IMapper mapper, ISubscriptionRepository subscriptionRepository, IHttpContextAccessor httpContextAccessor,
-            ILogger<GetProfileQueryHandler> logger)
+            , IMapper mapper, ISubscriptionRepository subscriptionRepository, IHttpContextAccessor httpContextAccessor)
         {
             _userManager = userManager;
             _currentUserId = currentUserId;
             _mapper = mapper;
             _subscriptionRepository = subscriptionRepository;
             _httpContextAccessor = httpContextAccessor;
-            _logger = logger;
         }
 
         public async Task<UserProfileDto> Handle(GetProfileQuery request, CancellationToken cancellationToken)
@@ -38,8 +35,9 @@ namespace Application.Features.Users.Queries.GetProfile
             if (user!.HasOnboarded)
             {
                 var subdomain = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SubDomain];
-                _logger.LogWarning("Subdomain from cookie: {Subdomain}", subdomain);
-                user.IsSubscribed = await _subscriptionRepository.HasActiveSubscriptionByTenantDomain(subdomain!, cancellationToken);
+                //user.IsSubscribed = await _subscriptionRepository.HasActiveSubscriptionByTenantDomain(subdomain!, cancellationToken);
+                //userProfileDto.IsSubscribed = user.IsSubscribed;
+                userProfileDto.IsSubscribed = await _subscriptionRepository.HasActiveSubscriptionByTenantDomain(subdomain!, cancellationToken);
             }
             return userProfileDto;
         }
