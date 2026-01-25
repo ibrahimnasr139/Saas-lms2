@@ -25,12 +25,12 @@ namespace Application.Features.Tenants.Queries.GetLastTenant
         public async Task<LastTenantDto?> Handle(GetLastTenantQuery request, CancellationToken cancellationToken)
         {
             var userId = _currentUserId.GetUserId();
-            var sunDomain = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SubDomain];
+            var subdomain = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SubDomain];
             var cacheKey = $"{CacheKeysConstants.LastTenantKey}_{userId}";
 
             var tenant = await _hybridCache.GetOrCreateAsync(
                 cacheKey,
-                async ct => await _tenantRepository.GetLastTenantAsync(sunDomain, ct),
+                async ct => await _tenantRepository.GetLastTenantAsync(subdomain, ct),
                 new HybridCacheEntryOptions
                 {
                     Expiration = TimeSpan.FromHours(1)

@@ -1,12 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Infrastructure.Persistence.Migrations
+namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class RestartAllMigrations : Migration
+    public partial class inital : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -497,7 +498,7 @@ namespace Infrastructure.Persistence.Migrations
                     TenantRoleId = table.Column<int>(type: "integer", nullable: false),
                     InvitedById = table.Column<int>(type: "integer", nullable: true),
                     JoinedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ExperienceYears = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    ExperienceYears = table.Column<int>(type: "integer", maxLength: 100, nullable: false),
                     JobTitle = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Bio = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
                     DisplayName = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),

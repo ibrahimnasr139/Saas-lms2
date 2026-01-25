@@ -2,5 +2,5 @@
 
 namespace Application.Features.Users.Queries.GetTenants
 {
-    public sealed record GetTenantsQuery() : IRequest<IEnumerable<UserTenantsDto>>;
+    public sealed record GetTenantsQuery : IRequest<IEnumerable<UserTenantsDto>>;
 }

@@ -21,5 +21,16 @@ namespace Infrastructure.Repositories
             };
             await _context.Subscriptions.AddAsync(subscription, cancellationToken);
         }
+
+        public async Task<bool> HasActiveSubscriptionByTenantDomain(string subdomain, CancellationToken cancellationToken)
+        {
+            return await (from s in _context.Subscriptions
+                            join t in _context.Tenants on s.TenantId equals t.Id
+                            where t.SubDomain == subdomain &&
+                                    (s.Status == SubscriptionStatus.Active || 
+                                    s.Status == SubscriptionStatus.Trialed)
+                                    && s.EndsAt > DateTime.UtcNow
+                           select s).AnyAsync(cancellationToken);
+        }
     }
 }

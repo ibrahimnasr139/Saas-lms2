@@ -31,7 +31,7 @@ namespace Application.Features.TenantMembers.Queries.GetCurrentTenantMember
                 {
                     var tenantMember = await _tenantMemberRepository.GetCurrentTenantMemberAsync(userId, cancellationToken);
                     var permissions = tenantMember!.HasFullAccess ? null
-                        : await _tenantMemberRepository.GetAllPermissions(tenantMember.TenantMemberId, cancellationToken);
+                        : await _tenantMemberRepository.GetAllPermissions(tenantMember.Id, cancellationToken);
                     tenantMember.permissions = permissions;
                     return tenantMember;
                 },
