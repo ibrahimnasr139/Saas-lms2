@@ -16,7 +16,7 @@ namespace Api.Controllers
         [HttpGet("statistics")]
         public async Task<IActionResult> GetStatistics()
         {
-
+            return Ok();
         }
 
 
