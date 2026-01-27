@@ -3,7 +3,6 @@ using Application.Constants;
 using Application.Contracts.Repositories;
 using Application.Features.Users.Dtos;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 
 namespace Application.Features.Users.Queries.GetProfile
 {
@@ -14,7 +13,6 @@ namespace Application.Features.Users.Queries.GetProfile
         private readonly IMapper _mapper;
         private readonly ISubscriptionRepository _subscriptionRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-
         public GetProfileQueryHandler(UserManager<ApplicationUser> userManager, ICurrentUserId currentUserId
             , IMapper mapper, ISubscriptionRepository subscriptionRepository, IHttpContextAccessor httpContextAccessor)
         {
