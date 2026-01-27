@@ -33,7 +33,18 @@ namespace Application.Features.Users.Queries.GetProfile
             if (user!.HasOnboarded)
             {
                 var subdomain = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SubDomain];
-                user.IsSubscribed = await _subscriptionRepository.HasActiveSubscriptionByTenantDomain(subdomain!, cancellationToken);
+                userProfileDto.IsSubscribed = await _subscriptionRepository.HasActiveSubscriptionByTenantDomain(subdomain!, cancellationToken);
+            }
+            if (user.LastActiveTenantSubDomain is not null)
+            {
+                _httpContextAccessor?.HttpContext?.Response.Cookies.Append(AuthConstants.SubDomain, user.LastActiveTenantSubDomain, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                    Domain = AuthConstants.CookieDomain,
+                    IsEssential = true
+                });
             }
             return userProfileDto;
         }

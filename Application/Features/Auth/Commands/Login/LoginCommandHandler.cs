@@ -63,6 +63,17 @@ namespace Application.Features.Auth.Commands.Login
                 BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(request.Email, EmailConstants.EmailConfirmationSubject, emailBody));
                 return UserErrors.EmailNotConfirmed;
             }
+            if (user.LastActiveTenantSubDomain is not null)
+            {
+                _httpContextAccessor?.HttpContext?.Response.Cookies.Append(AuthConstants.SubDomain, user.LastActiveTenantSubDomain, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None,
+                    Domain = AuthConstants.CookieDomain,
+                    IsEssential = true
+                });
+            }
             _tokenProvider.GenerateJwtToken(user!);
             var refreshToken = _tokenProvider.GenerateRefreshToken();
             _refreshRepository.AddRefreshToken(user, refreshToken.token, refreshToken.expiresOn, cancellationToken);

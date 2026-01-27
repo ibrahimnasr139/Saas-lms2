@@ -14,13 +14,6 @@ namespace Infrastructure.Persistence.Configurations
                    .IsRequired();
             builder.Property(u => u.LastActiveTenantSubDomain)
                    .HasMaxLength(200);
-            builder.Property(u => u.HasOnboarded)
-                   .IsRequired();
-            builder.Property(u => u.IsSubscribed)
-                   .IsRequired();
-            builder.Property(u => u.CreatedAt)
-                   .IsRequired();
-            builder.Property(u => u.UpdatedAt);
         }
     }
 }

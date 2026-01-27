@@ -7,9 +7,8 @@ namespace Domain.Entites
     {
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
-        public string LastActiveTenantSubDomain { get; set; } = string.Empty;
+        public string? LastActiveTenantSubDomain { get; set; }
         public bool HasOnboarded { get; set; }
-        public bool IsSubscribed { get; set; }
         public string? ProfilePicture { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
