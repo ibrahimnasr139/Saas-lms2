@@ -6,5 +6,6 @@
         public const string LastTenantKey = "Last_Tenant";
         public const string UserTenantsKey = "User_Tenants";
         public const string CurrentTenantMemberKey = "Current_Tenant_Member";
+        public const string CourseStatisticsKey = "Course_Statistics";
     }
 }
