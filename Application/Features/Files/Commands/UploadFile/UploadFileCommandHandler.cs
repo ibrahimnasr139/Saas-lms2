@@ -1,8 +1,10 @@
 ﻿using Application.Common;
+using Application.Constants;
 using Application.Contracts.Files;
 using Application.Contracts.Repositories;
 using Application.Features.Files.Dtos;
 using Domain.Enums;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.Files.Commands.UploadFile
 {
@@ -12,14 +14,18 @@ namespace Application.Features.Files.Commands.UploadFile
         private readonly IFileRepository _fileRepository;
         private readonly IMapper _mapper;
         private readonly ICurrentUserId _currentUserId;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ITenantRepository _tenantRepository;
 
         public UploadFileCommandHandler(IFileService fileService, IFileRepository fileRepository,
-            IMapper mapper, ICurrentUserId currentUserId)
+            IMapper mapper, ICurrentUserId currentUserId,IHttpContextAccessor httpContextAccessor, ITenantRepository tenantRepository)
         {
             _fileService = fileService;
             _fileRepository = fileRepository;
             _mapper = mapper;
             _currentUserId = currentUserId;
+            _httpContextAccessor = httpContextAccessor;
+            _tenantRepository = tenantRepository;
         }
         public async Task<OneOf<UploadFileDto, Error>> Handle(UploadFileCommand request, CancellationToken cancellationToken)
         {
@@ -28,6 +34,11 @@ namespace Application.Features.Files.Commands.UploadFile
             var fileName = request.Name ?? request.File.FileName;
             var path = _fileService.GetPath(fileId, fileName, request.Folder, request.File.FileName);
             var userId = _currentUserId.GetUserId();
+
+            int? tenantId = null;
+            var subdomain = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SubDomain];
+            if (subdomain != null)
+                tenantId = await _tenantRepository.GetTenantIdAsync(subdomain!, cancellationToken);
 
             string? cdnUrl = await _fileService.UploadAsync(request.File, path, request.Folder);
 
@@ -46,7 +57,8 @@ namespace Application.Features.Files.Commands.UploadFile
                 UploadedById = userId,
                 Status = request.Embedding?.Enabled == true
                     ? FileStatus.Processing
-                    : FileStatus.Success
+                    : FileStatus.Success,
+                TenantId = tenantId
             };
 
             await _fileRepository.CreateAsync(file, cancellationToken);
