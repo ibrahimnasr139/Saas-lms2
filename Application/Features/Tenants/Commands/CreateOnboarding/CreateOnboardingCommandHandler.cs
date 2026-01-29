@@ -79,17 +79,12 @@ namespace Application.Features.Tenants.Commands.CreateOnboarding
                 );
                 await _tenantRepository.AddTenantMemberAsync(tenantMember, cancellationToken);
                 await _tenantRepository.AssignAssistantPermissions(assistantRoleId, cancellationToken);
-                await _tenantRepository.CommitTransactionAsync(cancellationToken);
-
-
-
 
                 var planId = await _planRepository.GetPlanIdAsync(freePlanPricingId, cancellationToken);
                 var planFeatureIds = await _planRepository.GetPlanFeatureIdsAsync(planId, cancellationToken);
                 await _tenantRepository.InitializeTenantUsageAsync(planFeatureIds, subscriptionId, createdTenantId);
 
-
-
+                await _tenantRepository.CommitTransactionAsync(cancellationToken);
 
 
                 await _hybridCache.RemoveAsync($"{CacheKeysConstants.LastTenantKey}_{ownerId}", cancellationToken);
