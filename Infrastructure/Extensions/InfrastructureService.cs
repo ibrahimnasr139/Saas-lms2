@@ -56,6 +56,12 @@ namespace Infrastructure.Extensions
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
 
+
+            builder.Services.AddOptions<AiTranscriptionOptions>()
+                 .BindConfiguration(nameof(AiTranscriptionOptions))
+                 .ValidateDataAnnotations()
+                 .ValidateOnStart();
+
             builder.Services.AddHangfire(config =>
             {
                 var connectionString = BuildPostgresConnectionString(configuration);

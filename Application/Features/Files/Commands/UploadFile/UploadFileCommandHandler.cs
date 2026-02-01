@@ -18,7 +18,7 @@ namespace Application.Features.Files.Commands.UploadFile
         private readonly ITenantRepository _tenantRepository;
 
         public UploadFileCommandHandler(IFileService fileService, IFileRepository fileRepository,
-            IMapper mapper, ICurrentUserId currentUserId,IHttpContextAccessor httpContextAccessor, ITenantRepository tenantRepository)
+            IMapper mapper, ICurrentUserId currentUserId, IHttpContextAccessor httpContextAccessor, ITenantRepository tenantRepository)
         {
             _fileService = fileService;
             _fileRepository = fileRepository;
@@ -34,14 +34,14 @@ namespace Application.Features.Files.Commands.UploadFile
             var fileName = request.Name ?? request.File.FileName;
             var path = _fileService.GetPath(fileId, fileName, request.Folder, request.File.FileName);
             var userId = _currentUserId.GetUserId();
-
             int? tenantId = null;
+            string? cdnUrl;
+
             var subdomain = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SubDomain];
             if (subdomain != null)
                 tenantId = await _tenantRepository.GetTenantIdAsync(subdomain!, cancellationToken);
 
-            string? cdnUrl = await _fileService.UploadAsync(request.File, path, request.Folder);
-
+            cdnUrl = await _fileService.UploadAsync(request.File, request.Folder, fileId, path, request.EnableEmbedding, cancellationToken);
             if (cdnUrl == null)
                 return FileError.UploadFailed;
 
@@ -55,9 +55,7 @@ namespace Application.Features.Files.Commands.UploadFile
                 Type = fileType,
                 Url = cdnUrl,
                 UploadedById = userId,
-                Status = request.Embedding?.Enabled == true
-                    ? FileStatus.Processing
-                    : FileStatus.Success,
+                Status = request.EnableEmbedding == true ? FileStatus.Processing : FileStatus.Success,
                 TenantId = tenantId
             };
 
@@ -69,9 +67,7 @@ namespace Application.Features.Files.Commands.UploadFile
                 FileId = fileId,
                 FileType = fileType.ToString(),
                 Url = cdnUrl,
-                OriginalName = request.Name != null
-                    ? request.Name
-                    : request.File.FileName,
+                OriginalName = request.Name != null ? request.Name : request.File.FileName,
                 Size = request.File.Length
             };
         }

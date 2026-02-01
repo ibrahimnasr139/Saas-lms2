@@ -1,4 +1,5 @@
 ﻿using Application.Constants;
+using Application.Features.Files.Commands.CallBack;
 using Application.Features.Files.Commands.UploadFile;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -16,6 +17,7 @@ namespace Api.Controllers
         {
             _mediator = mediator;
         }
+
         [HttpPost("upload")]
         public async Task<IActionResult> UploadFile([FromForm] UploadFileCommand uploadFileCommand)
         {
@@ -27,5 +29,12 @@ namespace Api.Controllers
             );
         }
 
+
+        [HttpPost("callback")]
+        public async Task<IActionResult> CallBack([FromBody] CallBackCommand command)
+        {
+            await _mediator.Send(command);
+            return NoContent();
+        }
     }
 }
