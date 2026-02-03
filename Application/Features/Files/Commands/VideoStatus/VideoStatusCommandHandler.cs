@@ -17,8 +17,8 @@ namespace Application.Features.Files.Commands.VideoStatus
             if (file == null)
                 return Unit.Value;
 
-            if (request.Status == FileStatus.Success.ToString())
-                file.Status = FileStatus.Success;
+            if (request.Status == FileStatus.Processing.ToString())
+                file.Status = FileStatus.Processing;
             else
                 await _fileRepository.DeleteFileAsync(file, cancellationToken);
 
