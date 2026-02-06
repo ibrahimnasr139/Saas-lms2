@@ -15,7 +15,8 @@ namespace Application.Features.Files.Commands.CreateUpload
         private readonly ITenantRepository _tenantRepository;
         private readonly IFileService _fileService;
         private readonly ILogger<CreateUploadCommandHandler> _logger;
-        private const int OverFlowSize = 20;
+
+        private const int OverFlowSizeMB = 20;
 
         public CreateUploadCommandHandler(IHttpContextAccessor httpContextAccessor, IPlanRepository planRepository,
             ISubscriptionRepository subscriptionRepository, ITenantRepository tenantRepository, IFileService fileService,
@@ -61,30 +62,37 @@ namespace Application.Features.Files.Commands.CreateUpload
 
 
 
-            var limitValue = await _planRepository.GetVideoStorageLimitAsync(cancellationToken);
-            _logger.LogWarning("VideoStorage Limit: {LimitValue}", limitValue);
+            var limitValueGB = await _planRepository.GetVideoStorageLimitAsync(cancellationToken);
+            var limitMB = limitValueGB * 1024;
+            _logger.LogWarning("VideoStorage Limit: {LimitMB} MB", limitMB);
+
+            var usedBytes = await _tenantRepository.GetPlanFeatureUsageAsync(planFeatureId, cancellationToken);
+            var usedMB = Math.Max(0, usedBytes / (1024 * 1024));
+            _logger.LogWarning("Current Used Storage: {UsedMB} MB", usedMB);
+
+            var requestMB = request.Size / (1024 * 1024);
+            _logger.LogWarning("Request Size: {RequestMB} MB", requestMB);
 
 
-            var used = await _tenantRepository.GetPlanFeatureUsageAsync(planFeatureId, cancellationToken);
-            _logger.LogWarning("Current Used Storage: {Used}", used);
+            var totalAfterUpload = usedMB + requestMB - OverFlowSizeMB;
+            _logger.LogWarning("TotalAfterUpload: {TotalAfterUpload} MB (Used: {UsedMB} + Request: {RequestMB} - Overflow: {OverflowMB})",
+                totalAfterUpload, usedMB, requestMB, OverFlowSizeMB);
 
-
-            var totalAfterUpload = (request.Size + used) - OverFlowSize;
-            _logger.LogWarning(
-               "TotalAfterUpload: {TotalAfterUpload} (Used: {Used} + Size: {Size} - Overflow: {Overflow})",
-               totalAfterUpload, used, request.Size, OverFlowSize);
-
-            if (totalAfterUpload > limitValue)
+            if (totalAfterUpload > limitMB)
+            {
+                _logger.LogWarning(
+                    "Upload rejected | TotalAfterUpload ({TotalAfterUpload} MB) > Limit ({LimitMB} MB)",
+                    totalAfterUpload, limitMB);
                 return FileError.UploadFailed;
+            }
 
             var credentials = await _fileService.CreateUploadCredentialsAsync(request.Title, request.Size, cancellationToken);
-
             if (credentials == null)
             {
                 _logger.LogError("Failed to create upload credentials");
                 return FileError.UploadFailed;
             }
-
+            _logger.LogWarning("CreateUpload completed successfully");
             return credentials == null ? FileError.UploadFailed : credentials;
         }
     }
