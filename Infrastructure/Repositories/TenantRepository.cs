@@ -246,5 +246,17 @@ namespace Infrastructure.Repositories
                 .Select(tu => tu.Used)
                 .FirstOrDefaultAsync(cancellationToken);
         }
+        public async Task InCreasePlanFeatureUsageAsync(int tenantId, Guid PlanFeatureId, long Size, CancellationToken cancellationToken)
+        {
+            await _dbContext.TenantUsage
+                .Where(tu => tu.TenantId == tenantId && tu.PlanFeatureId == PlanFeatureId)
+                .ExecuteUpdateAsync(s => s.SetProperty(tu => tu.Used, tu => tu.Used + Size), cancellationToken);
+        }
+        public async Task DeCreasePlanFeatureUsageAsync(int tenantId, Guid PlanFeatureId, long Size, CancellationToken cancellationToken)
+        {
+            await _dbContext.TenantUsage
+                .Where(tu => tu.TenantId == tenantId && tu.PlanFeatureId == PlanFeatureId)
+                .ExecuteUpdateAsync(s => s.SetProperty(tu => tu.Used, tu => tu.Used - Size), cancellationToken);
+        }
     }
 }

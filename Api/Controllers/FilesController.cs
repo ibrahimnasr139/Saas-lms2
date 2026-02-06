@@ -56,7 +56,7 @@ namespace Api.Controllers
         [HttpPut("video-status/{id}")]
         public async Task<IActionResult> UpdateVideoStatus([FromRoute] string id, [FromBody] VideoStatusRequestDto request, CancellationToken cancellationToken)
         {
-            await _mediator.Send(new VideoStatusCommand(id, request.Status), cancellationToken);
+            await _mediator.Send(new VideoStatusCommand(id, request.Status, request.Size), cancellationToken);
             return NoContent();
         }
     }

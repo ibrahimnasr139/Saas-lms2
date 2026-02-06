@@ -1,4 +1,5 @@
 ﻿using Application.Constants;
+using Application.Features.Tenants.Commands.DeleteContentLibraryResource;
 using Application.Features.Tenants.Queries.GetContentLibraryResources;
 using Application.Features.Tenants.Queries.GetContentLibraryStatistics;
 using Application.Features.Tenants.Queries.GetLastTenant;
@@ -6,7 +7,6 @@ using Application.Features.Tenants.Queries.GetTenantUsage;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace Api.Controllers
 {
@@ -48,10 +48,22 @@ namespace Api.Controllers
 
 
         [HttpGet("content-library/statistics")]
-        public async Task<IActionResult> GetContentLibraryStatistics()
+        public async Task<IActionResult> GetContentLibraryStatistics(CancellationToken cancellationToken)
         {
-            var response = await _mediator.Send(new GetContentLibraryStatisticsQuery());
+            var response = await _mediator.Send(new GetContentLibraryStatisticsQuery(), cancellationToken);
             return Ok(response);
+        }
+
+
+        [HttpDelete("content-library/resources/{id}")]
+        public async Task<IActionResult> DeleteContentLibraryResource([FromRoute] string id, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new DeleteContentLibraryResourceCommand(id), cancellationToken);
+
+            return result.Match<IActionResult>(
+                success => Ok(success),
+                error => StatusCode((int)error.HttpStatusCode, error.Message)
+            );
         }
     }
 }

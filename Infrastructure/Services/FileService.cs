@@ -20,23 +20,15 @@ namespace Infrastructure.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly HttpClient _httpClient;
 
-        private readonly IPlanRepository _planRepository;
-        private readonly ISubscriptionRepository _subscriptionRepository;
-        private readonly ITenantRepository _tenantRepository;
-
         private const int OverFlowSize = 20;
 
         public FileService(IOptions<Common.Options.FileOptions> fileOptions, IOptions<BunnyOptions> bunnyOptions,
-            IOptions<AiTranscriptionOptions> aiOptions, IHttpContextAccessor httpContextAccessor, HttpClient httpClient,
-            IPlanRepository planRepository, ISubscriptionRepository subscriptionRepository, ITenantRepository tenantRepository)
+            IOptions<AiTranscriptionOptions> aiOptions, IHttpContextAccessor httpContextAccessor, HttpClient httpClient)
         {
             _fileOptions = fileOptions;
             _bunnyOptions = bunnyOptions;
             _httpClient = httpClient;
             _aiOptions = aiOptions;
-            _planRepository = planRepository;
-            _subscriptionRepository = subscriptionRepository;
-            _tenantRepository = tenantRepository;
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -114,20 +106,6 @@ namespace Infrastructure.Services
         public async Task<CreateUploadDto?> CreateUploadCredentialsAsync(string title, int Size, CancellationToken cancellationToken)
         {
             if (Size > _fileOptions.Value.VideoMaxSize)
-                return null;
-
-            var subDomain = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SubDomain];
-            var tenantId = await _tenantRepository.GetTenantIdAsync(subDomain!, cancellationToken);
-            var planPricingId = await _subscriptionRepository.GetPlanPricingIdAsync(tenantId, cancellationToken);
-            var planId = await _planRepository.GetPlanIdAsync(planPricingId, cancellationToken);
-            var featureId = await _planRepository.GetVideoStorageFeatureIdAsync(cancellationToken);
-            var planFeatureId = await _planRepository.GetPlanFeatureIdByFeatureIdAsync(planId, featureId, cancellationToken);
-
-            var limitValue = await _planRepository.GetVideoStorageLimitAsync(cancellationToken);
-            var used = await _tenantRepository.GetPlanFeatureUsageAsync(planFeatureId, cancellationToken);
-
-            var totalAfterUpload = (Size + used) - OverFlowSize;
-            if (totalAfterUpload > limitValue)
                 return null;
 
             var libraryId = _bunnyOptions.Value.VideoLibraryId;

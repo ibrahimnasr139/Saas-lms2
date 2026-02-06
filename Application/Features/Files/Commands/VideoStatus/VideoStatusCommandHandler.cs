@@ -1,14 +1,25 @@
-﻿
+﻿using Application.Constants;
 using Application.Contracts.Repositories;
 using Domain.Enums;
+using Microsoft.AspNetCore.Http;
 
 namespace Application.Features.Files.Commands.VideoStatus
 {
     internal sealed class VideoStatusCommandHandler : IRequestHandler<VideoStatusCommand, Unit>
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IPlanRepository _planRepository;
+        private readonly ISubscriptionRepository _subscriptionRepository;
+        private readonly ITenantRepository _tenantRepository;
         private readonly IFileRepository _fileRepository;
-        public VideoStatusCommandHandler(IFileRepository fileRepository)
+
+        public VideoStatusCommandHandler(IHttpContextAccessor httpContextAccessor, IPlanRepository planRepository,
+            ISubscriptionRepository subscriptionRepository, ITenantRepository tenantRepository, IFileRepository fileRepository)
         {
+            _httpContextAccessor = httpContextAccessor;
+            _planRepository = planRepository;
+            _subscriptionRepository = subscriptionRepository;
+            _tenantRepository = tenantRepository;
             _fileRepository = fileRepository;
         }
         public async Task<Unit> Handle(VideoStatusCommand request, CancellationToken cancellationToken)
@@ -18,7 +29,20 @@ namespace Application.Features.Files.Commands.VideoStatus
                 return Unit.Value;
 
             if (request.Status == FileStatus.Processing.ToString())
+            {
                 file.Status = FileStatus.Processing;
+                if (request.Size.HasValue && request.Size.Value > 0)
+                {
+                    var subDomain = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SubDomain];
+                    var tenantId = await _tenantRepository.GetTenantIdAsync(subDomain!, cancellationToken);
+                    var planPricingId = await _subscriptionRepository.GetPlanPricingIdAsync(tenantId, cancellationToken);
+                    var planId = await _planRepository.GetPlanIdAsync(planPricingId, cancellationToken);
+                    var featureId = await _planRepository.GetVideoStorageFeatureIdAsync(cancellationToken);
+                    var planFeatureId = await _planRepository.GetPlanFeatureIdByFeatureIdAsync(planId, featureId, cancellationToken);
+
+                    await _tenantRepository.InCreasePlanFeatureUsageAsync(tenantId, planFeatureId, request.Size.Value, cancellationToken);
+                }
+            }
             else
                 await _fileRepository.DeleteFileAsync(file, cancellationToken);
 
