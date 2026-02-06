@@ -8,5 +8,6 @@
         public string Extension { get; set; } = string.Empty;
         public int Size { get; set; }
         public DateTime UploadedAt { get; set; }
+        public string Status { get; set; } = string.Empty;
     }
 }
