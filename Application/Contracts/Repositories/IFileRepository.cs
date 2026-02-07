@@ -4,5 +4,7 @@
     {
         Task CreateAsync(Domain.Entites.File file, CancellationToken cancellationToken);
         Task<int> SaveAsync(CancellationToken cancellationToken);
+        Task<Domain.Entites.File?> GetFileByIdAsync(string FileId, CancellationToken cancellationToken);
+        Task DeleteFileAsync(Domain.Entites.File file, CancellationToken cancellationToken);
     }
 }

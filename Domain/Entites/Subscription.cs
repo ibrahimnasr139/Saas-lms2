@@ -18,5 +18,6 @@ namespace Domain.Entites
         public DateTime EndsAt { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
+        public ICollection<TenantUsage> TenantUsages { get; set; } = [];
     }
 }

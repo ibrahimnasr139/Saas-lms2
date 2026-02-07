@@ -26,6 +26,7 @@ RUN dotnet publish -c Release -o /app/out
 # Runtime Stage
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
+
 COPY --from=build /app/out .
 
 # Expose port

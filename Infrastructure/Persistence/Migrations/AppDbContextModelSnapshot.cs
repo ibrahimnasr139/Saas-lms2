@@ -837,6 +837,44 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("TenantRoles");
                 });
 
+            modelBuilder.Entity("Domain.Entites.TenantUsage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("PlanFeatureId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("SubscriptionId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Used")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlanFeatureId");
+
+                    b.HasIndex("SubscriptionId");
+
+                    b.HasIndex("TenantId", "SubscriptionId", "PlanFeatureId")
+                        .IsUnique();
+
+                    b.ToTable("TenantUsage");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -1007,7 +1045,7 @@ namespace Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Domain.Entites.CourseProgress", b =>
                 {
                     b.HasOne("Domain.Entites.Course", "Course")
-                        .WithMany()
+                        .WithMany("CourseProgresses")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1223,7 +1261,7 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entites.TenantRole", "TenantRole")
-                        .WithMany()
+                        .WithMany("TenantMembers")
                         .HasForeignKey("TenantRoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1250,6 +1288,33 @@ namespace Infrastructure.Persistence.Migrations
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Domain.Entites.TenantUsage", b =>
+                {
+                    b.HasOne("Domain.Entites.PlanFeature", "PlanFeature")
+                        .WithMany("TenantUsages")
+                        .HasForeignKey("PlanFeatureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.Subscription", "Subscription")
+                        .WithMany("TenantUsages")
+                        .HasForeignKey("SubscriptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entites.Tenant", "Tenant")
+                        .WithMany("TenantUsages")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PlanFeature");
+
+                    b.Navigation("Subscription");
 
                     b.Navigation("Tenant");
                 });
@@ -1312,6 +1377,8 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entites.Course", b =>
                 {
+                    b.Navigation("CourseProgresses");
+
                     b.Navigation("Enrollments");
                 });
 
@@ -1327,6 +1394,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("PlanPricings");
                 });
 
+            modelBuilder.Entity("Domain.Entites.PlanFeature", b =>
+                {
+                    b.Navigation("TenantUsages");
+                });
+
             modelBuilder.Entity("Domain.Entites.PlanPricing", b =>
                 {
                     b.Navigation("Subscriptions");
@@ -1335,6 +1407,11 @@ namespace Infrastructure.Persistence.Migrations
             modelBuilder.Entity("Domain.Entites.Student", b =>
                 {
                     b.Navigation("Enrollments");
+                });
+
+            modelBuilder.Entity("Domain.Entites.Subscription", b =>
+                {
+                    b.Navigation("TenantUsages");
                 });
 
             modelBuilder.Entity("Domain.Entites.Tenant", b =>
@@ -1352,11 +1429,15 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("TenantMembers");
 
                     b.Navigation("TenantRoles");
+
+                    b.Navigation("TenantUsages");
                 });
 
             modelBuilder.Entity("Domain.Entites.TenantRole", b =>
                 {
                     b.Navigation("RolePermissions");
+
+                    b.Navigation("TenantMembers");
                 });
 #pragma warning restore 612, 618
         }

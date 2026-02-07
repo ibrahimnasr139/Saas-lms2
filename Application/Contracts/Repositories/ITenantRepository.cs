@@ -1,4 +1,5 @@
 ﻿using Application.Features.Tenants.Dtos;
+using Domain.Enums;
 
 namespace Application.Contracts.Repositories
 {
@@ -17,5 +18,18 @@ namespace Application.Contracts.Repositories
         Task BeginTransactionAsync(CancellationToken cancellationToken);
         Task CommitTransactionAsync(CancellationToken cancellationToken);
         Task RollbackTransactionAsync(CancellationToken cancellationToken);
+
+        Task<int> GetTenantIdAsync(string subDomain, CancellationToken cancellationToken);
+        Task<TenantUsageDto> GetTenantUsageAsync(int tenantId, CancellationToken cancellationToken);
+        Task InitializeTenantUsageAsync(List<Guid> PlanFeatureId, int SubscriptionId, int TenantId);
+
+
+        Task<ContentLibraryResourceDto> GetTenantLibraryResource(int TenantId, FileType Type, string? Q , CancellationToken cancellationToken );
+        Task<ContentLibraryStatisticsDto> GetStatisticsAsync(int TenantId, CancellationToken cancellationToken);
+
+
+        Task<int> GetPlanFeatureUsageAsync(Guid PlanFeatureId, CancellationToken cancellationToken);
+        Task InCreasePlanFeatureUsageAsync(int tenantId, Guid PlanFeatureId, long Size, CancellationToken cancellationToken);
+        Task DeCreasePlanFeatureUsageAsync(int tenantId, Guid PlanFeatureId, long Size, CancellationToken cancellationToken);
     }
 }

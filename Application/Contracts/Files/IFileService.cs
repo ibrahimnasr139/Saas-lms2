@@ -1,4 +1,5 @@
-﻿using Domain.Enums;
+﻿using Application.Features.Files.Dtos;
+using Domain.Enums;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Contracts.Files
@@ -7,13 +8,13 @@ namespace Application.Contracts.Files
     {
         long GetMaxSize(FileType fileType);
         string GetPath(string fileId, string name, string? folder, string originalFileName);
+        FileType GetFileType(string contentType);
         string CreateCdnUrl(string path);
         string CreateUploadUrl(string path);
-
-
-        FileType GetFileType(string contentType);
         Task<string?> UploadFileAsync(IFormFile file, string path);
-        Task<string?> UploadVideoAsync(IFormFile video, string? folder);
-        Task<string?> UploadAsync(IFormFile file, string path, string? folder = null);
+        Task CallAIService(IFormFile file, FileType fileType, string fileId);
+
+
+        Task<CreateUploadDto?> CreateUploadCredentialsAsync(string title, int Size, CancellationToken cancellationToken);
     }
 }

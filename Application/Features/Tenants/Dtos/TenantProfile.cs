@@ -23,6 +23,25 @@ namespace Application.Features.Tenants.Dtos
             CreateMap<TeachingLevel, LabelValueIdDto>();
             CreateMap<Grade, LabelValueIdDto>();
 
+            CreateMap<Domain.Entites.File, DocumentDto>()
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.UploadedAt, opt => opt.MapFrom(src => src.CreatedAt))
+                .ForMember(dest => dest.Size, opt => opt.MapFrom(src => src.Size / 1024))
+                .ForMember(dest => dest.Extension, opt => opt.MapFrom(src => Path.GetExtension(src.Url).TrimStart('.')));
+
+            CreateMap<Domain.Entites.File, ImageDto>()
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.UploadedAt, opt => opt.MapFrom(src => src.CreatedAt))
+                .ForMember(dest => dest.Size, opt => opt.MapFrom(src => src.Size / 1024))
+                .ForMember(dest => dest.Extension, opt => opt.MapFrom(src => Path.GetExtension(src.Url).TrimStart('.')));
+
+
+            CreateMap<Domain.Entites.File, VideoDto>()
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.UploadedAt, opt => opt.MapFrom(src => src.CreatedAt))
+                .ForMember(dest => dest.Size, opt => opt.MapFrom(src => src.Size / 1024))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
+                .ForMember(dest => dest.Extension, opt => opt.MapFrom(src => Path.GetExtension(src.Url).TrimStart('.')));
         }
     }
 }

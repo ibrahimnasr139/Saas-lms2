@@ -2,6 +2,7 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.Constants;
+using Domain.Enums;
 using Infrastructure.Constants;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -130,6 +131,132 @@ namespace Infrastructure.Repositories
                 PermissionConstants.VIEW_QUESTION_BANK,
                 PermissionConstants.GRADE_QUIZZES,
             };
+        }
+        public Task<int> GetTenantIdAsync(string subDomain, CancellationToken cancellationToken)
+        {
+            return _dbContext.Tenants
+                .AsNoTracking()
+                .Where(t => t.SubDomain == subDomain)
+                .Select(t => t.Id)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task<TenantUsageDto> GetTenantUsageAsync(int tenantId, CancellationToken cancellationToken)
+        {
+            var result = await (from s in _dbContext.Subscriptions.AsNoTracking()
+                                join tu in _dbContext.TenantUsage on s.Id equals tu.SubscriptionId
+                                join pf in _dbContext.PlanFeatures on tu.PlanFeatureId equals pf.Id
+                                join p in _dbContext.Plans on pf.PlanId equals p.Id
+                                join f in _dbContext.Features on pf.FeatureId equals f.Id
+                                where s.TenantId == tenantId
+                                group new { tu, pf, f } by new
+                                {
+                                    s.Id,
+                                    s.Status,
+                                    s.StartsAt,
+                                    s.EndsAt,
+                                    PlanId = p.Id,
+                                    PlanName = p.Name
+                                } into g
+                                select new TenantUsageDto
+                                {
+                                    Subscription = new SubscriptionDto
+                                    {
+                                        Id = g.Key.Id,
+                                        Status = g.Key.Status.ToString(),
+                                        Start = g.Key.StartsAt,
+                                        End = g.Key.EndsAt,
+                                        Plan = new SubscriptionPlanDto
+                                        {
+                                            Id = g.Key.PlanId,
+                                            Name = g.Key.PlanName
+                                        }
+                                    },
+                                    Usage = g.Select(x => new UsageDto
+                                    {
+                                        FeatureKey = x.f.Key,
+                                        Name = x.f.Name,
+                                        Used = x.tu.Used,
+                                        Limit = x.pf.LimitValue,
+                                        Unit = x.pf.LimitUnit
+                                    }).ToList()
+                                }
+                    ).FirstOrDefaultAsync(cancellationToken);
+
+            return result!;
+        }
+
+        public async Task InitializeTenantUsageAsync(List<Guid> PlanFeatureId, int SubscriptionId, int TenantId)
+        {
+            var tenantUsages = PlanFeatureId.Select(planFeatureId => new TenantUsage
+            {
+                PlanFeatureId = planFeatureId,
+                SubscriptionId = SubscriptionId,
+                TenantId = TenantId
+            }).ToList();
+
+            _dbContext.TenantUsage.AddRange(tenantUsages);
+        }
+
+
+
+        public async Task<ContentLibraryResourceDto> GetTenantLibraryResource(int TenantId, FileType Type, string? Q, CancellationToken cancellationToken)
+        {
+            var query = _dbContext.Files
+                .AsNoTracking()
+                .Where(f => f.TenantId == TenantId && f.Type == Type);
+
+            if (!string.IsNullOrWhiteSpace(Q))
+                query = query.Where(f => f.Name.Contains(Q));
+
+            var files = await query.ToListAsync(cancellationToken);
+
+            return new ContentLibraryResourceDto
+            {
+                Resources = new ResourceDto
+                {
+                    Documents = Type == FileType.Document ? _mapper.Map<List<DocumentDto>>(files) : new(),
+                    Videos = Type == FileType.Video ? _mapper.Map<List<VideoDto>>(files) : new(),
+                    Images = Type == FileType.Image ? _mapper.Map<List<ImageDto>>(files) : new(),
+                }
+            };
+        }
+        public async Task<ContentLibraryStatisticsDto> GetStatisticsAsync(int TenantId, CancellationToken cancellationToken)
+        {
+            var files = await _dbContext.Files
+                .Where(f => f.TenantId == TenantId)
+                .ToListAsync(cancellationToken);
+
+            return new ContentLibraryStatisticsDto
+            {
+                TotalFiles = files.Count,
+                TotalDocuments = files.Count(f => f.Type == FileType.Document),
+                TotalVideos = files.Count(f => f.Type == FileType.Video),
+                TotalImages = files.Count(f => f.Type == FileType.Image),
+            };
+        }
+
+
+
+        public Task<int> GetPlanFeatureUsageAsync(Guid PlanFeatureId, CancellationToken cancellationToken)
+        {
+            return _dbContext.TenantUsage
+                .AsNoTracking()
+                .Where(tu => tu.PlanFeatureId == PlanFeatureId)
+                .Select(tu => tu.Used)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+        public async Task InCreasePlanFeatureUsageAsync(int tenantId, Guid PlanFeatureId, long Size, CancellationToken cancellationToken)
+        {
+            await _dbContext.TenantUsage
+                .Where(tu => tu.TenantId == tenantId && tu.PlanFeatureId == PlanFeatureId)
+                .ExecuteUpdateAsync(s => s.SetProperty(tu => tu.Used, tu => tu.Used + Size), cancellationToken);
+        }
+        public async Task DeCreasePlanFeatureUsageAsync(int tenantId, Guid PlanFeatureId, long Size, CancellationToken cancellationToken)
+        {
+            await _dbContext.TenantUsage
+                .Where(tu => tu.TenantId == tenantId && tu.PlanFeatureId == PlanFeatureId)
+                .ExecuteUpdateAsync(s => s.SetProperty(tu => tu.Used, tu => tu.Used - Size), cancellationToken);
         }
     }
 }

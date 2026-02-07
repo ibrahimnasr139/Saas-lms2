@@ -56,6 +56,12 @@ namespace Infrastructure.Extensions
                 .ValidateDataAnnotations()
                 .ValidateOnStart();
 
+
+            builder.Services.AddOptions<AiTranscriptionOptions>()
+                 .BindConfiguration(nameof(AiTranscriptionOptions))
+                 .ValidateDataAnnotations()
+                 .ValidateOnStart();
+
             builder.Services.AddHangfire(config =>
             {
                 var connectionString = BuildPostgresConnectionString(configuration);
@@ -92,6 +98,7 @@ namespace Infrastructure.Extensions
             builder.Services.AddHttpClient<IFileService, FileService>();
             builder.Services.AddScoped<ITenantMemberRepository, TenantMemberRepository>();
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+            builder.Services.AddScoped<ITenantRoleRepository, TenantRoleRepository>();
         }
         public static string BuildPostgresConnectionString(IConfiguration configuration)
         {

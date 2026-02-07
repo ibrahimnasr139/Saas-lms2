@@ -6,5 +6,6 @@ namespace Application.Contracts.Repositories
     {
         Task<List<string>?> GetAllPermissions(int tenantRoleId, CancellationToken cancellationToken);
         Task<CurrentTenantMemberDto?> GetCurrentTenantMemberAsync(string userId, CancellationToken cancellationToken);
+        Task<List<TenantMembersDto>> GetTenantMembersAsync(int tenantId, CancellationToken cancellationToken);
     }
 }

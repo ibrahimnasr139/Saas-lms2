@@ -1,5 +1,6 @@
 ﻿using Application.Constants;
 using Application.Features.TenantMembers.Queries.GetCurrentTenantMember;
+using Application.Features.TenantMembers.Queries.GetTenantMembers;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,10 +19,18 @@ namespace Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet("current")]
-        public async Task<IActionResult> GetCurrent()
+        [HttpGet("")]
+        public async Task<IActionResult> GetTenantMembers(CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetCurrentTenantMemberQuery());
+            var result =await _mediator.Send(new GetTenantMembersQuery(), cancellationToken);
+            return Ok(result);
+        }
+
+
+        [HttpGet("current")]
+        public async Task<IActionResult> GetCurrent(CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetCurrentTenantMemberQuery(),cancellationToken);
             return Ok(result);
         }
     }

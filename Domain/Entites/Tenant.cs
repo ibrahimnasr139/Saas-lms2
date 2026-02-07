@@ -20,5 +20,6 @@ namespace Domain.Entites
         public ICollection<Subscription> Subscriptions { get; set; } = [];
 
         public ICollection<Course> Courses = [];
+        public ICollection<TenantUsage> TenantUsages { get; set; } = [];
     }
 }

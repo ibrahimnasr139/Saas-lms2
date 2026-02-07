@@ -10,5 +10,6 @@
         public bool HasAllPermissions { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public ICollection<RolePermission> RolePermissions { get; set; } = [];
+        public ICollection<TenantMember> TenantMembers { get; set; } = [];
     }
 }

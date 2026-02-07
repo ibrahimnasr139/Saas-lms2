@@ -19,6 +19,10 @@ namespace Infrastructure.Persistence.Configurations
                    .IsRequired();
             builder.Property(tm => tm.IsActive)
                    .IsRequired();
+
+            builder.HasOne(tm => tm.TenantRole)
+                   .WithMany(t => t.TenantMembers)
+                   .HasForeignKey(tm => tm.TenantRoleId);
         }
     }
 }
