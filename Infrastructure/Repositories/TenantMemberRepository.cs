@@ -30,5 +30,13 @@ namespace Infrastructure.Repositories
                  .ProjectTo<CurrentTenantMemberDto>(_mapper.ConfigurationProvider)
                  .FirstOrDefaultAsync(tm => tm.UserId == userId, cancellationToken);
         }
+        public Task<List<TenantMembersDto>> GetTenantMembersAsync(int tenantId, CancellationToken cancellationToken)
+        {
+            return _context.TenantMembers
+                .AsNoTracking()
+                .Where(tm => tm.TenantId == tenantId)
+                .ProjectTo<TenantMembersDto>(_mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
+        }
     }
 }
