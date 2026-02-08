@@ -37,8 +37,7 @@ namespace Application.Features.TenantMembers.Commands.InviteTenantMember
         public async Task<OneOf<InviteTenantMemberDto, Error>> Handle(InviteTenantMemberCommand request, CancellationToken cancellationToken)
         {
             var subDomain = _httpContextAccessor.HttpContext?.Request.Cookies[AuthConstants.SubDomain];
-            //var tenantId = await _tenantRepository.GetTenantIdAsync(subDomain!, cancellationToken);
-            var tenantId = await _tenantRepository.GetTenantIdAsync("codecraft", cancellationToken);
+            var tenantId = await _tenantRepository.GetTenantIdAsync(subDomain!, cancellationToken);
             var user = await _userManager.FindByEmailAsync(request.email);
 
             if (user is not null)
@@ -52,8 +51,7 @@ namespace Application.Features.TenantMembers.Commands.InviteTenantMember
             var currentUserId = _currentUserId.GetUserId();
             var invitedByMemberId = await _tenantMemberRepository.GetMemberIdByUserIdAsync(currentUserId, tenantId, cancellationToken);
 
-            //var tenant = await _tenantRepository.GetLastTenantAsync(subDomain, cancellationToken);
-            var tenant = await _tenantRepository.GetLastTenantAsync("codecraft", cancellationToken);
+            var tenant = await _tenantRepository.GetLastTenantAsync(subDomain, cancellationToken);
             var roleName = await _tenantRoleRepository.GetRoleNameAsync(request.roleId, cancellationToken);
 
             var tenantInvite = new TenantInvite
