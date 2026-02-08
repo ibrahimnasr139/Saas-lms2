@@ -1,8 +1,8 @@
 ﻿using Application.Constants;
-using Application.Features.Courses.Queries;
+using Application.Features.Courses.Queries.GetAll;
+using Application.Features.Courses.Queries.GetStatistics;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -18,9 +18,15 @@ namespace Api.Controllers
             _mediator = mediator;
         }
         [HttpGet("statistics")]
-        public async Task<IActionResult> GetStatistics()
+        public async Task<IActionResult> GetStatistics(CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetStatisticsQuery());
+            var result = await _mediator.Send(new GetStatisticsQuery(), cancellationToken);
+            return Ok(result);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] GetAllQuery getAllQuery, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(getAllQuery, cancellationToken);
             return Ok(result);
         }
     }

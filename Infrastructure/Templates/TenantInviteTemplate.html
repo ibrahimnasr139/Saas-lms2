@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="supported-color-schemes" content="light dark" />
+    <title>دعوة للانضمام</title>
+    <style type="text/css" rel="stylesheet" media="all">
+        @import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap");
+
+        body {
+            width: 100% !important;
+            height: 100%;
+            margin: 0;
+            -webkit-text-size-adjust: none;
+            font-family: "Cairo", Arial, sans-serif;
+            background-color: #f2f4f6;
+            color: #51545e;
+        }
+
+        .email-wrapper {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f4f6;
+        }
+
+        .email-content {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .email-body {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .email-body_inner {
+            width: 570px;
+            margin: 0 auto;
+            padding: 0;
+            background-color: #ffffff;
+            border-radius: 8px;
+        }
+
+        .content-cell {
+            padding: 45px;
+            text-align: right;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #333333;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        p {
+            margin: 0.4em 0 1.1875em;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #51545e;
+            text-align: right;
+        }
+
+        .button {
+            background-color: #22bc66;
+            border-radius: 8px;
+            color: #fff !important;
+            display: inline-block;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 15px 30px;
+            text-decoration: none;
+            text-align: center;
+        }
+
+            .button:hover {
+                background-color: #1da657;
+            }
+
+        .body-action {
+            width: 100%;
+            margin: 30px auto;
+            padding: 0;
+            text-align: center;
+        }
+
+        .platform-name {
+            color: #22bc66;
+            font-weight: bold;
+        }
+
+        .role-name {
+            background-color: #f4f4f7;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        .expiry-note {
+            font-size: 14px;
+            color: #a8aaaf;
+            margin-top: 20px;
+        }
+
+        .body-sub {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #eaeaec;
+        }
+
+            .body-sub p {
+                font-size: 13px;
+                color: #a8aaaf;
+            }
+
+        .email-footer {
+            width: 570px;
+            margin: 0 auto;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+            .email-footer p {
+                color: #a8aaaf;
+                font-size: 13px;
+            }
+
+        @media only screen and (max-width: 600px) {
+            .email-body_inner,
+            .email-footer {
+                width: 100% !important;
+            }
+
+            .content-cell {
+                padding: 25px !important;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body,
+            .email-body,
+            .email-body_inner,
+            .email-content,
+            .email-wrapper {
+                background-color: #333333 !important;
+                color: #fff !important;
+            }
+
+            .email-body_inner {
+                background-color: #444444 !important;
+            }
+
+            p, h1 {
+                color: #fff !important;
+            }
+
+            .role-name {
+                background-color: #555555 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <table class="email-wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+        <tr>
+            <td align="center">
+                <table class="email-content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                    <tr>
+                        <td class="email-body" width="570" cellpadding="0" cellspacing="0">
+                            <table class="email-body_inner" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
+                                <tr>
+                                    <td class="content-cell">
+                                        <div>
+                                            <h1>مرحباً! 👋</h1>
+                                            <p>
+                                                لقد تمت دعوتك للانضمام إلى منصة
+                                                <span class="platform-name">{{platform_name}}</span>
+                                            </p>
+                                            <p>
+                                                الدور المخصص لك:
+                                                <span class="role-name">{{role_name}}</span>
+                                            </p>
+                                            <p>
+                                                اضغط على الزر أدناه لقبول الدعوة والانضمام للفريق.
+                                            </p>
+
+                                            <table class="body-action" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                                                <tr>
+                                                    <td align="center">
+                                                        <a href="{{action_url}}" class="button" target="_blank">
+                                                            قبول الدعوة
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+
+                                            <p class="expiry-note">
+                                                ⏰ هذه الدعوة صالحة لمدة {{expiry_hours}} ساعات فقط.
+                                            </p>
+
+                                            <table class="body-sub" role="presentation">
+                                                <tr>
+                                                    <td>
+                                                        <p>
+                                                            إذا كنت تواجه مشكلة في الزر أعلاه، انسخ الرابط التالي والصقه في متصفحك:
+                                                        </p>
+                                                        <p style="word-break: break-all;">{{action_url}}</p>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table class="email-footer" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
+                                <tr>
+                                    <td align="center">
+                                        <p>© {{year}} جميع الحقوق محفوظة</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

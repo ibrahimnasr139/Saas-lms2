@@ -11,5 +11,6 @@
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public ICollection<RolePermission> RolePermissions { get; set; } = [];
         public ICollection<TenantMember> TenantMembers { get; set; } = [];
+        public ICollection<TenantInvite> TenantInvites { get; set; } = [];
     }
 }

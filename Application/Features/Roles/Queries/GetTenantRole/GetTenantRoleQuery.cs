@@ -2,5 +2,5 @@
 
 namespace Application.Features.Roles.Queries.GetTenantRole
 {
-    public sealed record GetTenantRoleQuery : IRequest<List<TenantRolesDto>> { }
+    public sealed record GetTenantRoleQuery : IRequest<List<TenantRolesDto>>;
 }

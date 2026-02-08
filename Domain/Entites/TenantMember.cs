@@ -17,6 +17,6 @@
         public string? Bio { get; set; }
         public string? DisplayName { get; set; } = string.Empty;
         public bool IsActive { get; set; } = true;
-
+        public ICollection<TenantInvite> TenantInvites { get; set; } = [];
     }
 }
