@@ -18,8 +18,8 @@ namespace Domain.Entites
         public ICollection<TeachingLevel> TeachingLevels { get; set; } = [];
         public ICollection<Subject> Subjects { get; set; } = [];
         public ICollection<Subscription> Subscriptions { get; set; } = [];
-
-        public ICollection<Course> Courses = [];
+        public ICollection<Course> Courses { get; set; } = [];
         public ICollection<TenantUsage> TenantUsages { get; set; } = [];
+        public ICollection<TenantInvite> TenantInvites { get; set; } = [];
     }
 }

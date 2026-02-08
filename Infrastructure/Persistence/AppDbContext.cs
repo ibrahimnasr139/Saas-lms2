@@ -25,6 +25,7 @@ namespace Infrastructure.Persistence
         internal DbSet<Enrollment> Enrollments { get; set; }
         internal DbSet<CourseProgress> CourseProgresses { get; set; }
         internal DbSet<TenantUsage> TenantUsage { get; set; }
+        internal DbSet<TenantInvite> TenantInvites { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

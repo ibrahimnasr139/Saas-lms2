@@ -38,5 +38,21 @@ namespace Infrastructure.Repositories
                 .ProjectTo<TenantMembersDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }
+        public Task<List<int>> GetTenantIdsAsync(string userId, CancellationToken cancellationToken)
+        {
+            return _context.TenantMembers
+                .AsNoTracking()
+                .Where(tm => tm.UserId == userId)
+                .Select(tm => tm.TenantId)
+                .ToListAsync(cancellationToken);
+        }
+        public Task<int> GetMemberIdByUserIdAsync(string userId, int tenantId, CancellationToken cancellationToken)
+        {
+            return _context.TenantMembers
+                .AsNoTracking()
+                .Where(tm => tm.UserId == userId && tm.TenantId == tenantId)
+                .Select(tm => tm.Id)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
     }
 }

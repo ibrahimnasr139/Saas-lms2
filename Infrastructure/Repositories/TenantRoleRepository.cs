@@ -22,5 +22,13 @@ namespace Infrastructure.Repositories
                .ProjectTo<TenantRolesDto>(_mapper.ConfigurationProvider)
                .ToListAsync(cancellationToken);
         }
+        public Task<string?> GetRoleNameAsync(int roleId, CancellationToken cancellationToken)
+        {
+            return _context.TenantRoles
+                .AsNoTracking()
+                .Where(tr => tr.Id == roleId)
+                .Select(tr => tr.Name)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
     }
 }

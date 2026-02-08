@@ -99,6 +99,7 @@ namespace Infrastructure.Extensions
             builder.Services.AddScoped<ITenantMemberRepository, TenantMemberRepository>();
             builder.Services.AddScoped<ICourseRepository, CourseRepository>();
             builder.Services.AddScoped<ITenantRoleRepository, TenantRoleRepository>();
+            builder.Services.AddScoped<ITenantInviteRepository, TenantInviteRepository>();
         }
         public static string BuildPostgresConnectionString(IConfiguration configuration)
         {
